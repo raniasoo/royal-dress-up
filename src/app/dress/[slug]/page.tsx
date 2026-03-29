@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const dress = getDressBySlug(slug);
   if (!dress) return { title: "드레스를 찾을 수 없습니다" };
   return {
-    title: `${dress.name} | Royal Dress-Up`,
+    title: `${dress.name} | The Royal Closet`,
     description: dress.description,
     openGraph: {
       title: `${dress.name} - ${dress.royal.name}`,

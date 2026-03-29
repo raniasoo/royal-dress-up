@@ -19,7 +19,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 text-rose-600">
           <Crown className="h-6 w-6" />
           <span className="text-lg font-bold tracking-tight">
-            Royal Dress-Up
+            The Royal Closet
           </span>
         </Link>
 

@@ -19,7 +19,7 @@ export function ShareModal({ open, onClose, imageDataUrl, title = "내 왕실 �
   function handleDownload() {
     if (!imageDataUrl) return;
     const link = document.createElement("a");
-    link.download = "royal-dress-up.png";
+    link.download = "the-royal-closet.png";
     link.href = imageDataUrl;
     link.click();
     toast.success("이미지가 저장되었습니다");
@@ -47,7 +47,7 @@ export function ShareModal({ open, onClose, imageDataUrl, title = "내 왕실 �
   }
 
   function shareToKakao() {
-    const text = encodeURIComponent(`${title} - Royal Dress-Up으로 왕실 드레스를 입어봤어요! 👑`);
+    const text = encodeURIComponent(`${title} - The Royal Closet으로 왕실 드레스를 입어봤어요! 👑`);
     window.open(`https://story.kakao.com/share?url=${encodeURIComponent(window.location.href)}&text=${text}`, "_blank");
   }
 
@@ -58,14 +58,14 @@ export function ShareModal({ open, onClose, imageDataUrl, title = "내 왕실 �
     }
     try {
       const shareData: ShareData = {
-        title: "Royal Dress-Up",
+        title: "The Royal Closet",
         text: `${title} 👑✨`,
         url: window.location.href,
       };
       if (imageDataUrl) {
         const res = await fetch(imageDataUrl);
         const blob = await res.blob();
-        const file = new File([blob], "royal-dress-up.png", { type: "image/png" });
+        const file = new File([blob], "the-royal-closet.png", { type: "image/png" });
         if (navigator.canShare?.({ files: [file] })) {
           shareData.files = [file];
         }

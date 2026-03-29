@@ -11,11 +11,11 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Royal Dress-Up | 왕실 드레스 가상 피팅",
+  title: "The Royal Closet | 왕실 드레스 가상 피팅",
   description:
     "영국 왕실의 유명 드레스를 가상으로 입어보세요. AI 가상 피팅과 아바타 드레스업을 경험해보세요.",
   openGraph: {
-    title: "Royal Dress-Up | 왕실 드레스 가상 피팅",
+    title: "The Royal Closet | 왕실 드레스 가상 피팅",
     description:
       "다이애나, 케이트의 유명 드레스를 가상으로 입어보세요.",
     type: "website",

@@ -196,7 +196,7 @@ function DressUpContent() {
     if (!canvas) return;
     const dataUrl = canvas.toDataURL({ format: "png", multiplier: 2 });
     const link = document.createElement("a");
-    link.download = "royal-dress-up.png";
+    link.download = "the-royal-closet.png";
     link.href = dataUrl;
     link.click();
   }

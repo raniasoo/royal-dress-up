@@ -7,7 +7,7 @@
   </defs>
   <rect width="600" height="800" fill="url(#bg)"/>
   <text x="300" y="380" text-anchor="middle" font-family="serif" font-size="28" fill="#8b7355" opacity="0.9">Wedding Dress</text>
-  <text x="300" y="420" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#8b7355" opacity="0.5">Royal Dress-Up</text>
+  <text x="300" y="420" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#8b7355" opacity="0.5">The Royal Closet</text>
   <!-- Dress silhouette -->
   <path d="M250,200 L230,280 L200,500 L180,650 L420,650 L400,500 L370,280 L350,200 Q300,230 250,200" fill="#8b7355" opacity="0.1"/>
 </svg>

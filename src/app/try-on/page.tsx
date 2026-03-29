@@ -5,9 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw } from "lucide-react";
-import { dresses, getDressBySlug } from "@/data/dresses";
+import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2 } from "lucide-react";
+import { dresses, getClothing, getDressBySlug } from "@/data/dresses";
 import { Button } from "@/components/ui/Button";
+import { ShareModal } from "@/components/ui/ShareModal";
 import { Spinner } from "@/components/ui/Spinner";
 
 const steps = ["사진 업로드", "드레스 선택", "결과 확인"];
@@ -27,6 +28,7 @@ function TryOnContent() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const [resultReady, setResultReady] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => {
     const dressParam = searchParams.get("dress");
@@ -185,7 +187,7 @@ function TryOnContent() {
             </h2>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {dresses.map((dress) => (
+              {getClothing().map((dress) => (
                 <button
                   key={dress.slug}
                   onClick={() => setSelectedSlug(dress.slug)}
@@ -270,9 +272,9 @@ function TryOnContent() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap justify-center gap-3">
-                  <Button variant="outline" disabled>
-                    <Download className="mr-1.5 h-4 w-4" />
-                    다운로드 (데모)
+                  <Button onClick={() => setShareOpen(true)}>
+                    <Share2 className="mr-1.5 h-4 w-4" />
+                    저장 & 공유
                   </Button>
                   <Button
                     variant="ghost"
@@ -288,6 +290,13 @@ function TryOnContent() {
                     처음부터 다시
                   </Button>
                 </div>
+
+                <ShareModal
+                  open={shareOpen}
+                  onClose={() => setShareOpen(false)}
+                  imageDataUrl={photo}
+                  title={selectedDress ? `${selectedDress.name} 가상 피팅` : "AI 가상 피팅"}
+                />
               </div>
             )}
           </motion.div>

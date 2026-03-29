@@ -1,4 +1,4 @@
-import { Dress, Royal } from "@/types";
+import { Dress, Royal, ItemType } from "@/types";
 
 const diana: Royal = {
   name: "다이애나 비",
@@ -16,6 +16,30 @@ const elizabeth: Royal = {
   name: "엘리자베스 2세",
   nameEn: "Queen Elizabeth II",
   title: "영국 여왕",
+};
+
+const daphne: Royal = {
+  name: "다프네 브리저튼",
+  nameEn: "Daphne Bridgerton",
+  title: "헤이스팅스 공작부인",
+};
+
+const queenCharlotte: Royal = {
+  name: "샬럿 여왕",
+  nameEn: "Queen Charlotte",
+  title: "영국 여왕 (브리저튼)",
+};
+
+const penelope: Royal = {
+  name: "페넬로페 페더링턴",
+  nameEn: "Penelope Featherington",
+  title: "콜린 브리저튼 부인",
+};
+
+const marieAntoinette: Royal = {
+  name: "마리 앙투아네트",
+  nameEn: "Marie Antoinette",
+  title: "프랑스 왕비",
 };
 
 export const dresses: Dress[] = [
@@ -39,6 +63,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/diana-revenge/thumbnail.svg",
     },
     category: "dress",
+    itemType: "clothing",
     era: "1990s",
   },
   {
@@ -61,6 +86,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/diana-wedding/thumbnail.svg",
     },
     category: "gown",
+    itemType: "clothing",
     era: "1980s",
   },
   {
@@ -83,6 +109,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/diana-travolta/thumbnail.svg",
     },
     category: "gown",
+    itemType: "clothing",
     era: "1980s",
   },
   {
@@ -105,6 +132,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/kate-engagement/thumbnail.svg",
     },
     category: "dress",
+    itemType: "clothing",
     era: "2010s",
   },
   {
@@ -127,6 +155,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/kate-wedding/thumbnail.svg",
     },
     category: "gown",
+    itemType: "clothing",
     era: "2010s",
   },
   {
@@ -147,6 +176,7 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/kate-red-korea/thumbnail.svg",
     },
     category: "dress",
+    itemType: "clothing",
     era: "2020s",
   },
   {
@@ -169,13 +199,387 @@ export const dresses: Dress[] = [
       thumbnail: "/dresses/elizabeth-coronation/thumbnail.svg",
     },
     category: "gown",
+    itemType: "clothing",
     era: "1950s" as Dress["era"],
+  },
+  // === Accessories ===
+  {
+    slug: "spencer-tiara",
+    name: "스펜서 티아라",
+    nameEn: "The Spencer Tiara",
+    royal: diana,
+    designer: "Garrard",
+    year: 1981,
+    event: "다이애나 비 결혼식",
+    description:
+      "스펜서 가문 대대로 내려온 티아라로, 다이애나 비가 결혼식에서 착용하여 전 세계적으로 유명해졌습니다. 영국 왕실이 아닌 스펜서 가문의 소유입니다.",
+    funFact:
+      "이 티아라는 원래 1930년대에 제작되었으며, 다이애나의 두 언니도 결혼식에서 착용했습니다.",
+    tags: ["티아라", "다이아몬드", "결혼식", "스펜서 가문"],
+    images: {
+      catalog: "/dresses/spencer-tiara/catalog.svg",
+      garment: "/dresses/spencer-tiara/garment.svg",
+      overlay: "/dresses/spencer-tiara/overlay.svg",
+      thumbnail: "/dresses/spencer-tiara/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "1980s",
+    canvasPosition: { top: 20, left: 195, width: 110, height: 50 },
+  },
+  {
+    slug: "cambridge-lovers-knot-tiara",
+    name: "캠브리지 러버스 노트 티아라",
+    nameEn: "Cambridge Lover's Knot Tiara",
+    royal: kate,
+    designer: "Garrard",
+    year: 2015,
+    event: "국빈 만찬",
+    description:
+      "1914년 메리 여왕을 위해 제작된 티아라로, 다이애나 비가 자주 착용했으며 현재는 케이트 미들턴이 주요 행사에서 착용합니다. 진주와 다이아몬드로 장식되어 있습니다.",
+    funFact:
+      "다이애나는 이 티아라가 무거워서 두통이 생긴다고 말한 적이 있습니다.",
+    tags: ["티아라", "진주", "다이아몬드", "국빈 만찬"],
+    images: {
+      catalog: "/dresses/lovers-knot-tiara/catalog.svg",
+      garment: "/dresses/lovers-knot-tiara/garment.svg",
+      overlay: "/dresses/lovers-knot-tiara/overlay.svg",
+      thumbnail: "/dresses/lovers-knot-tiara/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 20, left: 195, width: 110, height: 50 },
+  },
+  {
+    slug: "diana-pearl-choker",
+    name: "다이애나 진주 초커",
+    nameEn: "Diana's Pearl Choker",
+    royal: diana,
+    designer: "Unknown (Royal Collection)",
+    year: 1994,
+    event: "다양한 공식 행사",
+    description:
+      "다이애나 비의 시그니처 악세서리 중 하나로, 여러 줄의 진주로 이루어진 초커 목걸이입니다. 사파이어 브로치를 중앙에 장식하여 착용하기도 했습니다.",
+    funFact:
+      "원래 엘리자베스 여왕이 선물한 브로치를 초커 목걸이의 중앙 장식으로 재활용했습니다.",
+    tags: ["목걸이", "진주", "초커", "사파이어"],
+    images: {
+      catalog: "/dresses/diana-pearl-choker/catalog.svg",
+      garment: "/dresses/diana-pearl-choker/garment.svg",
+      overlay: "/dresses/diana-pearl-choker/overlay.svg",
+      thumbnail: "/dresses/diana-pearl-choker/thumbnail.svg",
+    },
+    category: "necklace",
+    itemType: "accessory",
+    era: "1990s",
+    canvasPosition: { top: 140, left: 205, width: 90, height: 30 },
+  },
+  {
+    slug: "kate-sapphire-earrings",
+    name: "사파이어 드롭 이어링",
+    nameEn: "Sapphire Drop Earrings",
+    royal: kate,
+    designer: "Unknown (Royal Collection)",
+    year: 2011,
+    event: "다양한 공식 행사",
+    description:
+      "다이애나 비의 유명한 사파이어 약혼 반지와 세트인 귀걸이입니다. 케이트 미들턴이 물려받아 다양한 공식 행사에서 착용합니다.",
+    tags: ["귀걸이", "사파이어", "다이아몬드"],
+    images: {
+      catalog: "/dresses/kate-sapphire-earrings/catalog.svg",
+      garment: "/dresses/kate-sapphire-earrings/garment.svg",
+      overlay: "/dresses/kate-sapphire-earrings/overlay.svg",
+      thumbnail: "/dresses/kate-sapphire-earrings/thumbnail.svg",
+    },
+    category: "earrings",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 75, left: 185, width: 130, height: 30 },
+  },
+  {
+    slug: "diana-clutch-bag",
+    name: "다이애나 클러치백",
+    nameEn: "Diana's Clutch Bag",
+    royal: diana,
+    designer: "Anya Hindmarch",
+    year: 1990,
+    event: "공식 행사",
+    description:
+      "다이애나 비가 차에서 내릴 때 데콜테를 가리기 위해 클러치백을 사용한 것으로 유명합니다. 이 습관은 '클리비지 클러치'라는 별명을 얻었습니다.",
+    funFact:
+      "다이애나의 클러치백 사용법은 이후 왕실 에티켓의 하나로 자리잡았습니다.",
+    tags: ["백", "클러치", "가죽"],
+    images: {
+      catalog: "/dresses/diana-clutch/catalog.svg",
+      garment: "/dresses/diana-clutch/garment.svg",
+      overlay: "/dresses/diana-clutch/overlay.svg",
+      thumbnail: "/dresses/diana-clutch/thumbnail.svg",
+    },
+    category: "bag",
+    itemType: "accessory",
+    era: "1990s",
+    canvasPosition: { top: 320, left: 320, width: 60, height: 40 },
+  },
+  {
+    slug: "elizabeth-coronation-gloves",
+    name: "대관식 장갑",
+    nameEn: "Coronation Gloves",
+    royal: elizabeth,
+    designer: "Fownes",
+    year: 1953,
+    event: "웨스트민스터 사원 대관식",
+    description:
+      "엘리자베스 2세의 대관식에서 착용한 화이트 실크 장갑입니다. 손등에 정교한 자수가 수놓아져 있으며, 대관식의 격식을 상징합니다.",
+    tags: ["장갑", "화이트", "실크", "대관식"],
+    images: {
+      catalog: "/dresses/elizabeth-gloves/catalog.svg",
+      garment: "/dresses/elizabeth-gloves/garment.svg",
+      overlay: "/dresses/elizabeth-gloves/overlay.svg",
+      thumbnail: "/dresses/elizabeth-gloves/thumbnail.svg",
+    },
+    category: "gloves",
+    itemType: "accessory",
+    era: "1950s" as Dress["era"],
+    canvasPosition: { top: 340, left: 120, width: 60, height: 40 },
+  },
+  {
+    slug: "kate-jimmy-choo-pumps",
+    name: "지미 추 누드 펌프스",
+    nameEn: "Jimmy Choo Nude Pumps",
+    royal: kate,
+    designer: "Jimmy Choo",
+    year: 2011,
+    event: "다양한 공식 행사",
+    description:
+      "케이트 미들턴의 시그니처 슈즈로, 거의 모든 공식 행사에서 착용하는 누드 컬러 스틸레토 펌프스입니다. 심플하면서도 우아한 스타일의 상징입니다.",
+    tags: ["구두", "누드", "스틸레토", "펌프스"],
+    images: {
+      catalog: "/dresses/kate-pumps/catalog.svg",
+      garment: "/dresses/kate-pumps/garment.svg",
+      overlay: "/dresses/kate-pumps/overlay.svg",
+      thumbnail: "/dresses/kate-pumps/thumbnail.svg",
+    },
+    category: "shoes",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 610, left: 190, width: 120, height: 50 },
+  },
+  // === Bridgerton Collection ===
+  {
+    slug: "daphne-wedding-gown",
+    name: "다프네 웨딩 가운",
+    nameEn: "Daphne's Wedding Gown",
+    royal: daphne,
+    designer: "Ellen Mirojnick (의상 디자인)",
+    year: 2020,
+    event: "브리저튼 시즌1 - 헤이스팅스 공작과의 결혼식",
+    description:
+      "은색 자수가 수놓아진 아이보리 실크 가운으로, 리젠시 시대의 엠파이어 라인 실루엣이 특징입니다. 시즌1의 가장 아이코닉한 의상으로 로맨틱한 분위기를 완벽하게 표현했습니다.",
+    funFact:
+      "이 드레스는 제작에 약 3주가 걸렸으며, 섬세한 레이스와 은사 자수가 하나하나 수작업으로 완성되었습니다.",
+    tags: ["웨딩", "리젠시", "아이보리", "엠파이어라인"],
+    images: {
+      catalog: "/dresses/daphne-wedding/catalog.svg",
+      garment: "/dresses/daphne-wedding/garment.svg",
+      overlay: "/dresses/daphne-wedding/overlay.svg",
+      thumbnail: "/dresses/daphne-wedding/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1800s",
+  },
+  {
+    slug: "daphne-blue-ball-gown",
+    name: "다프네 블루 볼가운",
+    nameEn: "Daphne's Blue Ball Gown",
+    royal: daphne,
+    designer: "Ellen Mirojnick (의상 디자인)",
+    year: 2020,
+    event: "브리저튼 시즌1 - 첫 무도회",
+    description:
+      "다프네가 사교계에 데뷔하는 첫 무도회에서 입은 파스텔 블루 볼가운입니다. 리젠시 시대 특유의 하이 웨이스트와 퍼프 슬리브가 특징이며, 왕비에게 '올해의 다이아몬드'로 선정받는 장면을 장식했습니다.",
+    tags: ["볼가운", "파스텔블루", "리젠시", "무도회"],
+    images: {
+      catalog: "/dresses/daphne-blue-ball/catalog.svg",
+      garment: "/dresses/daphne-blue-ball/garment.svg",
+      overlay: "/dresses/daphne-blue-ball/overlay.svg",
+      thumbnail: "/dresses/daphne-blue-ball/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1800s",
+  },
+  {
+    slug: "queen-charlotte-gold-gown",
+    name: "샬럿 여왕 골드 가운",
+    nameEn: "Queen Charlotte's Gold Gown",
+    royal: queenCharlotte,
+    designer: "Lyn Paolo (의상 디자인)",
+    year: 2023,
+    event: "브리저튼: 퀸 샬럿 - 대관식",
+    description:
+      "샬럿 여왕의 화려한 골드 가운으로, 정교한 금사 자수와 보석 장식이 왕실의 위엄을 표현합니다. 거대한 스커트와 코르셋이 18세기 궁정 패션을 재현합니다.",
+    funFact:
+      "이 의상은 실제로 7미터 이상의 원단이 사용되었으며, 제작비만 수천만 원에 달합니다.",
+    tags: ["골드", "왕실", "코르셋", "18세기"],
+    images: {
+      catalog: "/dresses/charlotte-gold/catalog.svg",
+      garment: "/dresses/charlotte-gold/garment.svg",
+      overlay: "/dresses/charlotte-gold/overlay.svg",
+      thumbnail: "/dresses/charlotte-gold/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1800s",
+  },
+  {
+    slug: "penelope-yellow-dress",
+    name: "페넬로페 옐로우 드레스",
+    nameEn: "Penelope's Yellow Dress",
+    royal: penelope,
+    designer: "Ellen Mirojnick (의상 디자인)",
+    year: 2020,
+    event: "브리저튼 시즌1 - 페더링턴 가문 무도회",
+    description:
+      "페넬로페의 시그니처 옐로우 드레스로, 페더링턴 가문의 화려하고 과장된 스타일을 보여줍니다. 시즌이 진행될수록 페넬로페의 드레스가 세련되어지는 것이 의상 디자인의 핵심 포인트입니다.",
+    tags: ["옐로우", "리젠시", "무도회", "페더링턴"],
+    images: {
+      catalog: "/dresses/penelope-yellow/catalog.svg",
+      garment: "/dresses/penelope-yellow/garment.svg",
+      overlay: "/dresses/penelope-yellow/overlay.svg",
+      thumbnail: "/dresses/penelope-yellow/thumbnail.svg",
+    },
+    category: "dress",
+    itemType: "clothing",
+    era: "1800s",
+  },
+  // === Marie Antoinette / Historical ===
+  {
+    slug: "marie-antoinette-robe",
+    name: "마리 앙투아네트 로브 아 라 프랑세즈",
+    nameEn: "Robe à la Française",
+    royal: marieAntoinette,
+    designer: "Rose Bertin",
+    year: 1780,
+    event: "베르사유 궁전 무도회",
+    description:
+      "18세기 프랑스 궁정의 대표적인 드레스 형태인 로브 아 라 프랑세즈입니다. 파니에(속치마 틀)로 양옆을 크게 부풀린 실루엣과 풍성한 레이스 장식이 로코코 시대의 화려함을 상징합니다.",
+    funFact:
+      "마리 앙투아네트의 의상비는 당시 프랑스 국가 예산의 상당 부분을 차지했다고 전해집니다.",
+    tags: ["로코코", "파니에", "레이스", "베르사유"],
+    images: {
+      catalog: "/dresses/marie-robe/catalog.svg",
+      garment: "/dresses/marie-robe/garment.svg",
+      overlay: "/dresses/marie-robe/overlay.svg",
+      thumbnail: "/dresses/marie-robe/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1700s",
+  },
+  // === Jewelry / 보석 ===
+  {
+    slug: "diana-sapphire-ring",
+    name: "다이애나 사파이어 약혼 반지",
+    nameEn: "Diana's Sapphire Engagement Ring",
+    royal: diana,
+    designer: "Garrard",
+    year: 1981,
+    event: "약혼 발표",
+    description:
+      "12캐럿 실론 사파이어를 14개의 다이아몬드가 둘러싼 클러스터 링입니다. 다이애나 비가 카탈로그에서 직접 선택한 것으로 유명하며, 현재는 케이트 미들턴의 약혼 반지로 이어졌습니다.",
+    funFact:
+      "당시 왕실에서 기성 카탈로그 제품을 선택한 것이 논란이 되었으나, 이제는 세계에서 가장 유명한 약혼 반지가 되었습니다.",
+    tags: ["반지", "사파이어", "다이아몬드", "약혼"],
+    images: {
+      catalog: "/dresses/diana-sapphire-ring/catalog.svg",
+      garment: "/dresses/diana-sapphire-ring/garment.svg",
+      overlay: "/dresses/diana-sapphire-ring/overlay.svg",
+      thumbnail: "/dresses/diana-sapphire-ring/thumbnail.svg",
+    },
+    category: "necklace",
+    itemType: "accessory",
+    era: "1980s",
+    canvasPosition: { top: 300, left: 120, width: 40, height: 30 },
+  },
+  {
+    slug: "elizabeth-diamond-diadem",
+    name: "다이아몬드 다이어뎀",
+    nameEn: "Diamond Diadem",
+    royal: elizabeth,
+    designer: "Rundell, Bridge & Rundell",
+    year: 1953,
+    event: "대관식 행렬",
+    description:
+      "1820년 조지 4세를 위해 제작된 다이어뎀으로, 1,333개의 다이아몬드와 진주로 장식되어 있습니다. 영국 우표와 화폐에 엘리자베스 여왕이 착용한 모습으로 가장 많이 알려진 왕관입니다.",
+    funFact:
+      "이 다이어뎀은 대관식 자체가 아닌 대관식으로 가는 행렬에서 착용됩니다.",
+    tags: ["다이어뎀", "다이아몬드", "진주", "왕관"],
+    images: {
+      catalog: "/dresses/elizabeth-diadem/catalog.svg",
+      garment: "/dresses/elizabeth-diadem/garment.svg",
+      overlay: "/dresses/elizabeth-diadem/overlay.svg",
+      thumbnail: "/dresses/elizabeth-diadem/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "1950s" as Dress["era"],
+    canvasPosition: { top: 15, left: 195, width: 110, height: 50 },
+  },
+  {
+    slug: "marie-diamond-necklace",
+    name: "마리 앙투아네트 다이아몬드 목걸이",
+    nameEn: "Marie Antoinette's Diamond Necklace",
+    royal: marieAntoinette,
+    designer: "Boehmer & Bassenge",
+    year: 1785,
+    event: "목걸이 사건 (L'affaire du collier)",
+    description:
+      "647개의 다이아몬드, 총 2,800캐럿으로 이루어진 전설적인 목걸이입니다. '목걸이 사건'으로 프랑스 혁명의 도화선 중 하나가 되었으며, 역사상 가장 유명한 보석 스캔들의 중심에 있습니다.",
+    funFact:
+      "실제로 마리 앙투아네트는 이 목걸이를 구매하지 않았으나, 사기꾼들이 그녀의 이름을 도용하여 구입한 것이 거대한 스캔들로 번졌습니다.",
+    tags: ["목걸이", "다이아몬드", "스캔들", "혁명"],
+    images: {
+      catalog: "/dresses/marie-necklace/catalog.svg",
+      garment: "/dresses/marie-necklace/garment.svg",
+      overlay: "/dresses/marie-necklace/overlay.svg",
+      thumbnail: "/dresses/marie-necklace/thumbnail.svg",
+    },
+    category: "necklace",
+    itemType: "accessory",
+    era: "1700s",
+    canvasPosition: { top: 140, left: 200, width: 100, height: 35 },
+  },
+  {
+    slug: "charlotte-tiara",
+    name: "샬럿 여왕 다이아몬드 티아라",
+    nameEn: "Queen Charlotte's Tiara",
+    royal: queenCharlotte,
+    designer: "브리저튼 소품팀",
+    year: 2023,
+    event: "브리저튼: 퀸 샬럿 - 궁정 행사",
+    description:
+      "브리저튼 시리즈에서 샬럿 여왕이 착용한 화려한 대형 티아라입니다. 높이 솟은 디자인에 수백 개의 크리스탈이 장식되어 있으며, 여왕의 권위와 위엄을 상징합니다.",
+    tags: ["티아라", "크리스탈", "브리저튼", "왕관"],
+    images: {
+      catalog: "/dresses/charlotte-tiara/catalog.svg",
+      garment: "/dresses/charlotte-tiara/garment.svg",
+      overlay: "/dresses/charlotte-tiara/overlay.svg",
+      thumbnail: "/dresses/charlotte-tiara/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "1800s",
+    canvasPosition: { top: 10, left: 190, width: 120, height: 55 },
   },
 ];
 
-export const royals = [diana, kate, elizabeth];
+export const royals = [diana, kate, elizabeth, daphne, queenCharlotte, penelope, marieAntoinette];
 
 export const eras = [
+  "1700s",
+  "1800s",
   "1950s",
   "1980s",
   "1990s",
@@ -194,4 +598,16 @@ export function getDressesByRoyal(royalNameEn: string): Dress[] {
 
 export function getDressesByEra(era: string): Dress[] {
   return dresses.filter((d) => d.era === era);
+}
+
+export function getClothing(): Dress[] {
+  return dresses.filter((d) => d.itemType === "clothing");
+}
+
+export function getAccessories(): Dress[] {
+  return dresses.filter((d) => d.itemType === "accessory");
+}
+
+export function getItemsByCategory(category: string): Dress[] {
+  return dresses.filter((d) => d.category === category);
 }

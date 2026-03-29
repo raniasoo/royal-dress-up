@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { DressCard } from "./DressCard";
-import { dresses, royals, eras } from "@/data/dresses";
+import { dresses, royals, eras, getClothing } from "@/data/dresses";
 
 export function DressGrid() {
   const [royalFilter, setRoyalFilter] = useState<string | null>(null);
   const [eraFilter, setEraFilter] = useState<string | null>(null);
 
-  const filtered = dresses.filter((d) => {
+  const filtered = getClothing().filter((d) => {
     if (royalFilter && d.royal.nameEn !== royalFilter) return false;
     if (eraFilter && d.era !== eraFilter) return false;
     return true;

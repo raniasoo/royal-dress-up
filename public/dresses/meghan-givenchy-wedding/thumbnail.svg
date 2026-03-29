@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0e8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4c5a9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#bg)"/>
+  <text x="150" y="180" text-anchor="middle" font-family="serif" font-size="13" fill="#ffffff" opacity="0.9">Givenchy Wedding</text>
+  <text x="150" y="220" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#ffffff" opacity="0.5">Meghan Markle · 2018</text>
+  <path d="M250,180 L240,250 L220,450 L200,650 L400,650 L380,450 L360,250 L350,180 Q300,210 250,180" fill="#ffffff" opacity="0.15"/>
+</svg>

@@ -42,6 +42,18 @@ const marieAntoinette: Royal = {
   title: "프랑스 왕비",
 };
 
+const meghan: Royal = {
+  name: "메건 마클",
+  nameEn: "Meghan, Duchess of Sussex",
+  title: "서섹스 공작부인",
+};
+
+const graceKelly: Royal = {
+  name: "그레이스 켈리",
+  nameEn: "Grace Kelly",
+  title: "모나코 공비",
+};
+
 export const dresses: Dress[] = [
   {
     slug: "diana-revenge-dress",
@@ -573,9 +585,199 @@ export const dresses: Dress[] = [
     era: "1800s",
     canvasPosition: { top: 10, left: 190, width: 120, height: 55 },
   },
+  // === Meghan Markle ===
+  {
+    slug: "meghan-givenchy-wedding",
+    name: "지방시 웨딩 드레스",
+    nameEn: "Givenchy Wedding Dress",
+    royal: meghan,
+    designer: "Clare Waight Keller (Givenchy)",
+    year: 2018,
+    event: "세인트 조지 채플 결혼식",
+    description:
+      "메건 마클이 해리 왕자와의 결혼식에서 착용한 미니멀한 보트넥 실크 카디 웨딩드레스입니다. 5미터 길이의 실크 튤 베일에는 영연방 53개국을 상징하는 꽃이 수놓아져 있습니다.",
+    funFact:
+      "베일 자수 작업에만 500시간 이상이 소요되었으며, 메건이 직접 영연방 국가별 꽃을 선정했습니다.",
+    tags: ["웨딩", "화이트", "미니멀", "보트넥"],
+    images: {
+      catalog: "/dresses/meghan-givenchy-wedding/catalog.svg",
+      garment: "/dresses/meghan-givenchy-wedding/garment.svg",
+      overlay: "/dresses/meghan-givenchy-wedding/overlay.svg",
+      thumbnail: "/dresses/meghan-givenchy-wedding/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "2010s",
+  },
+  {
+    slug: "meghan-stella-reception",
+    name: "스텔라 매카트니 리셉션 드레스",
+    nameEn: "Stella McCartney Reception Dress",
+    royal: meghan,
+    designer: "Stella McCartney",
+    year: 2018,
+    event: "결혼식 리셉션",
+    description:
+      "결혼식 리셉션에서 착용한 릴리 화이트 홀터넥 드레스입니다. 등이 깊게 파인 실크 크레이프 소재로 모던하고 할리우드적인 글래머를 보여주었습니다. 아쿠아마린 칵테일 링과 함께 착용했습니다.",
+    funFact:
+      "이 드레스의 레플리카 버전이 스텔라 매카트니 웹사이트에서 한정 판매되어 즉시 완판되었습니다.",
+    tags: ["리셉션", "화이트", "홀터넥", "실크"],
+    images: {
+      catalog: "/dresses/meghan-stella-reception/catalog.svg",
+      garment: "/dresses/meghan-stella-reception/garment.svg",
+      overlay: "/dresses/meghan-stella-reception/overlay.svg",
+      thumbnail: "/dresses/meghan-stella-reception/thumbnail.svg",
+    },
+    category: "dress",
+    itemType: "clothing",
+    era: "2010s",
+  },
+  {
+    slug: "meghan-aquamarine-ring",
+    name: "다이애나 아쿠아마린 링",
+    nameEn: "Diana's Aquamarine Ring",
+    royal: meghan,
+    designer: "Asprey",
+    year: 2018,
+    event: "결혼식 리셉션",
+    description:
+      "다이애나 비가 생전에 즐겨 착용하던 대형 아쿠아마린 칵테일 링입니다. 메건이 결혼식 리셉션에서 착용하며 시어머니에 대한 경의를 표했습니다. 에메랄드 컷 아쿠아마린에 다이아몬드 세팅이 특징입니다.",
+    funFact:
+      "다이애나는 1996년 시드니를 방문할 때 이 반지를 착용했으며, 메건이 이를 이어받아 착용했습니다.",
+    tags: ["반지", "아쿠아마린", "다이아몬드", "칵테일링"],
+    images: {
+      catalog: "/dresses/meghan-aquamarine-ring/catalog.svg",
+      garment: "/dresses/meghan-aquamarine-ring/garment.svg",
+      overlay: "/dresses/meghan-aquamarine-ring/overlay.svg",
+      thumbnail: "/dresses/meghan-aquamarine-ring/thumbnail.svg",
+    },
+    category: "necklace",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 300, left: 120, width: 40, height: 30 },
+  },
+  {
+    slug: "meghan-queen-mary-tiara",
+    name: "퀸 메리 다이아몬드 반다 티아라",
+    nameEn: "Queen Mary Diamond Bandeau Tiara",
+    royal: meghan,
+    designer: "Garrard (1932 리세팅)",
+    year: 2018,
+    event: "세인트 조지 채플 결혼식",
+    description:
+      "1893년 제작된 다이아몬드 브로치를 중심으로 플렉서블 반다 밴드에 세팅한 티아라입니다. 엘리자베스 여왕이 메건에게 대여해주었으며, 센터의 10개 다이아몬드가 특징적인 아르데코 디자인입니다.",
+    funFact:
+      "이 티아라는 수십 년간 전시되지 않아 대중에게 거의 알려지지 않았다가 메건의 결혼식으로 세계적 주목을 받았습니다.",
+    tags: ["티아라", "다이아몬드", "아르데코", "반다"],
+    images: {
+      catalog: "/dresses/meghan-queen-mary-tiara/catalog.svg",
+      garment: "/dresses/meghan-queen-mary-tiara/garment.svg",
+      overlay: "/dresses/meghan-queen-mary-tiara/overlay.svg",
+      thumbnail: "/dresses/meghan-queen-mary-tiara/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 20, left: 195, width: 110, height: 50 },
+  },
+  // === Grace Kelly ===
+  {
+    slug: "grace-kelly-wedding-dress",
+    name: "그레이스 켈리 웨딩 드레스",
+    nameEn: "Grace Kelly Wedding Dress",
+    royal: graceKelly,
+    designer: "Helen Rose (MGM)",
+    year: 1956,
+    event: "모나코 대성당 결혼식",
+    description:
+      "할리우드 의상 디자이너 헬렌 로즈가 제작한 웨딩드레스로, 125년 된 브뤼셀 로즈 포인트 레이스가 사용되었습니다. 하이넥, 긴 소매, 풀스커트의 클래식한 실루엣은 이후 모든 로열 웨딩드레스의 표본이 되었습니다.",
+    funFact:
+      "MGM 스튜디오가 웨딩 선물로 이 드레스를 제작해주었으며, 현재 필라델피아 미술관에 전시되어 있습니다.",
+    tags: ["웨딩", "레이스", "아이보리", "하이넥"],
+    images: {
+      catalog: "/dresses/grace-kelly-wedding/catalog.svg",
+      garment: "/dresses/grace-kelly-wedding/garment.svg",
+      overlay: "/dresses/grace-kelly-wedding/overlay.svg",
+      thumbnail: "/dresses/grace-kelly-wedding/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1950s" as Dress["era"],
+  },
+  {
+    slug: "grace-kelly-blue-chiffon",
+    name: "블루 시폰 이브닝 가운",
+    nameEn: "Blue Chiffon Evening Gown",
+    royal: graceKelly,
+    designer: "Edith Head",
+    year: 1955,
+    event: "나잡히지 않는 도둑 (To Catch a Thief) 촬영",
+    description:
+      "히치콕 영화 '나잡히지 않는 도둑'에서 착용한 아이스 블루 시폰 가운입니다. 프렌치 리비에라의 불꽃놀이 장면에서 입은 이 드레스는 그레이스 켈리의 우아함을 상징하는 가장 유명한 영화 의상 중 하나입니다.",
+    funFact:
+      "이 영화 촬영 중 그레이스 켈리는 모나코의 레니에 3세 대공을 만났으며, 이듬해 결혼했습니다.",
+    tags: ["이브닝", "블루", "시폰", "할리우드"],
+    images: {
+      catalog: "/dresses/grace-kelly-blue-chiffon/catalog.svg",
+      garment: "/dresses/grace-kelly-blue-chiffon/garment.svg",
+      overlay: "/dresses/grace-kelly-blue-chiffon/overlay.svg",
+      thumbnail: "/dresses/grace-kelly-blue-chiffon/thumbnail.svg",
+    },
+    category: "gown",
+    itemType: "clothing",
+    era: "1950s" as Dress["era"],
+  },
+  {
+    slug: "grace-kelly-hermes-bag",
+    name: "에르메스 켈리 백",
+    nameEn: "Hermès Kelly Bag",
+    royal: graceKelly,
+    designer: "Hermès",
+    year: 1956,
+    event: "파파라치 사진 (임신 은폐)",
+    description:
+      "그레이스 켈리가 임신 초기 배를 가리기 위해 에르메스 가방을 사용한 사진이 라이프지에 실리면서, 이 가방은 '켈리 백'이라는 이름을 얻었습니다. 원래 1935년에 디자인된 'Sac à dépêches'가 그녀 덕분에 세계에서 가장 유명한 핸드백이 되었습니다.",
+    funFact:
+      "현재 빈티지 켈리 백은 상태와 소재에 따라 수천만 원에서 수억 원에 거래됩니다.",
+    tags: ["백", "에르메스", "가죽", "아이코닉"],
+    images: {
+      catalog: "/dresses/grace-kelly-hermes/catalog.svg",
+      garment: "/dresses/grace-kelly-hermes/garment.svg",
+      overlay: "/dresses/grace-kelly-hermes/overlay.svg",
+      thumbnail: "/dresses/grace-kelly-hermes/thumbnail.svg",
+    },
+    category: "bag",
+    itemType: "accessory",
+    era: "1950s" as Dress["era"],
+    canvasPosition: { top: 320, left: 320, width: 60, height: 50 },
+  },
+  {
+    slug: "kate-cartier-halo-tiara",
+    name: "카르티에 할로 티아라",
+    nameEn: "Cartier Halo Tiara",
+    royal: kate,
+    designer: "Cartier",
+    year: 2011,
+    event: "웨스트민스터 사원 결혼식",
+    description:
+      "1936년 조지 6세가 왕비를 위해 카르티에에 의뢰하여 제작한 티아라입니다. 739개의 브릴리언트 컷 다이아몬드와 149개의 바게트 컷 다이아몬드가 세팅되어 있으며, 케이트 미들턴이 결혼식에서 착용하여 전 세계를 매료시켰습니다.",
+    funFact:
+      "엘리자베스 2세가 18번째 생일에 아버지로부터 이 티아라를 선물받았습니다.",
+    tags: ["티아라", "다이아몬드", "카르티에", "결혼식"],
+    images: {
+      catalog: "/dresses/kate-cartier-halo/catalog.svg",
+      garment: "/dresses/kate-cartier-halo/garment.svg",
+      overlay: "/dresses/kate-cartier-halo/overlay.svg",
+      thumbnail: "/dresses/kate-cartier-halo/thumbnail.svg",
+    },
+    category: "tiara",
+    itemType: "accessory",
+    era: "2010s",
+    canvasPosition: { top: 20, left: 195, width: 110, height: 50 },
+  },
 ];
 
-export const royals = [diana, kate, elizabeth, daphne, queenCharlotte, penelope, marieAntoinette];
+export const royals = [diana, kate, elizabeth, daphne, queenCharlotte, penelope, marieAntoinette, meghan, graceKelly];
 
 export const eras = [
   "1700s",

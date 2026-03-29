@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="700" viewBox="0 0 500 700">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8c4d8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5b8ba8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="500" height="700" fill="url(#bg)"/>
+  <text x="250" y="330" text-anchor="middle" font-family="serif" font-size="22" fill="#ffffff" opacity="0.9">Blue Chiffon Gown</text>
+  <text x="250" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#ffffff" opacity="0.5">Edith Head · 1955</text>
+  <path d="M250,200 L230,300 L200,500 L180,650 L420,650 L400,500 L370,300 L350,200 Q300,230 250,200" fill="#e0f2fe" opacity="0.12"/>
+</svg>

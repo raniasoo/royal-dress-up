@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#faf5ef;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d9c8a9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#bg)"/>
+  <text x="150" y="180" text-anchor="middle" font-family="serif" font-size="13" fill="#ffffff" opacity="0.9">Wedding Dress</text>
+  <text x="150" y="220" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#ffffff" opacity="0.5">Grace Kelly · 1956</text>
+  <path d="M240,180 L220,280 L180,500 L160,650 L440,650 L420,500 L380,280 L360,180 Q300,220 240,180" fill="#ffffff" opacity="0.12"/>
+</svg>

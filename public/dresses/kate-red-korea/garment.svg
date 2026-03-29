@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+  <path d="M150,50 L130,130 L100,350 L80,500 L320,500 L300,350 L270,130 L250,50 Q200,80 150,50" fill="#c4302b" opacity="0.85" stroke="#8b1a15" stroke-width="2"/>
+  <text x="200" y="300" text-anchor="middle" font-family="serif" font-size="18" fill="#ffffff" opacity="0.7">Red Dress</text>
+</svg>

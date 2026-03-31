@@ -19,21 +19,21 @@ const elizabeth: Royal = {
 };
 
 const daphne: Royal = {
-  name: "다프네 브리저튼",
-  nameEn: "Daphne Bridgerton",
+  name: "다프네",
+  nameEn: "Daphne",
   title: "헤이스팅스 공작부인",
 };
 
 const queenCharlotte: Royal = {
   name: "샬럿 여왕",
   nameEn: "Queen Charlotte",
-  title: "영국 여왕 (브리저튼)",
+  title: "영국 여왕 (리젠시)",
 };
 
 const penelope: Royal = {
-  name: "페넬로페 페더링턴",
-  nameEn: "Penelope Featherington",
-  title: "콜린 브리저튼 부인",
+  name: "페넬로페",
+  nameEn: "Penelope",
+  title: "리젠시 시대 사교계",
 };
 
 const marieAntoinette: Royal = {
@@ -43,15 +43,15 @@ const marieAntoinette: Royal = {
 };
 
 const meghan: Royal = {
-  name: "메건 마클",
-  nameEn: "Meghan, Duchess of Sussex",
-  title: "서섹스 공작부인",
+  name: "윈저 모던",
+  nameEn: "Windsor Modern",
+  title: "서섹스 공작부인 스타일",
 };
 
 const graceKelly: Royal = {
-  name: "그레이스 켈리",
-  nameEn: "Grace Kelly",
-  title: "모나코 공비",
+  name: "모나코 클래식",
+  nameEn: "Monaco Classic",
+  title: "모나코 공비 스타일",
 };
 
 export const dresses: Dress[] = [
@@ -377,7 +377,7 @@ export const dresses: Dress[] = [
     era: "2010s",
     canvasPosition: { top: 610, left: 190, width: 120, height: 50 },
   },
-  // === Bridgerton Collection ===
+  // === Regency Era Collection ===
   {
     slug: "daphne-wedding-gown",
     name: "다프네 웨딩 가운",
@@ -385,7 +385,7 @@ export const dresses: Dress[] = [
     royal: daphne,
     designer: "Ellen Mirojnick (의상 디자인)",
     year: 2020,
-    event: "브리저튼 시즌1 - 헤이스팅스 공작과의 결혼식",
+    event: "리젠시 시대 드라마 - 헤이스팅스 공작과의 결혼식",
     description:
       "은색 자수가 수놓아진 아이보리 실크 가운으로, 리젠시 시대의 엠파이어 라인 실루엣이 특징입니다. 시즌1의 가장 아이코닉한 의상으로 로맨틱한 분위기를 완벽하게 표현했습니다.",
     funFact:
@@ -408,7 +408,7 @@ export const dresses: Dress[] = [
     royal: daphne,
     designer: "Ellen Mirojnick (의상 디자인)",
     year: 2020,
-    event: "브리저튼 시즌1 - 첫 무도회",
+    event: "리젠시 시대 드라마 - 첫 무도회",
     description:
       "다프네가 사교계에 데뷔하는 첫 무도회에서 입은 파스텔 블루 볼가운입니다. 리젠시 시대 특유의 하이 웨이스트와 퍼프 슬리브가 특징이며, 왕비에게 '올해의 다이아몬드'로 선정받는 장면을 장식했습니다.",
     tags: ["볼가운", "파스텔블루", "리젠시", "무도회"],
@@ -429,7 +429,7 @@ export const dresses: Dress[] = [
     royal: queenCharlotte,
     designer: "Lyn Paolo (의상 디자인)",
     year: 2023,
-    event: "브리저튼: 퀸 샬럿 - 대관식",
+    event: "리젠시 시대 드라마 - 대관식",
     description:
       "샬럿 여왕의 화려한 골드 가운으로, 정교한 금사 자수와 보석 장식이 왕실의 위엄을 표현합니다. 거대한 스커트와 코르셋이 18세기 궁정 패션을 재현합니다.",
     funFact:
@@ -452,7 +452,7 @@ export const dresses: Dress[] = [
     royal: penelope,
     designer: "Ellen Mirojnick (의상 디자인)",
     year: 2020,
-    event: "브리저튼 시즌1 - 페더링턴 가문 무도회",
+    event: "리젠시 시대 드라마 - 페더링턴 가문 무도회",
     description:
       "페넬로페의 시그니처 옐로우 드레스로, 페더링턴 가문의 화려하고 과장된 스타일을 보여줍니다. 시즌이 진행될수록 페넬로페의 드레스가 세련되어지는 것이 의상 디자인의 핵심 포인트입니다.",
     tags: ["옐로우", "리젠시", "무도회", "페더링턴"],
@@ -568,12 +568,12 @@ export const dresses: Dress[] = [
     name: "샬럿 여왕 다이아몬드 티아라",
     nameEn: "Queen Charlotte's Tiara",
     royal: queenCharlotte,
-    designer: "브리저튼 소품팀",
+    designer: "리젠시 드라마 소품팀",
     year: 2023,
-    event: "브리저튼: 퀸 샬럿 - 궁정 행사",
+    event: "리젠시 시대 드라마 - 궁정 행사",
     description:
       "브리저튼 시리즈에서 샬럿 여왕이 착용한 화려한 대형 티아라입니다. 높이 솟은 디자인에 수백 개의 크리스탈이 장식되어 있으며, 여왕의 권위와 위엄을 상징합니다.",
-    tags: ["티아라", "크리스탈", "브리저튼", "왕관"],
+    tags: ["티아라", "크리스탈", "리젠시", "왕관"],
     images: {
       catalog: "/dresses/charlotte-tiara/catalog.svg",
       garment: "/dresses/charlotte-tiara/garment.svg",
@@ -585,7 +585,7 @@ export const dresses: Dress[] = [
     era: "1800s",
     canvasPosition: { top: 10, left: 190, width: 120, height: 55 },
   },
-  // === Meghan Markle ===
+  // === Windsor Modern Collection ===
   {
     slug: "meghan-givenchy-wedding",
     name: "지방시 웨딩 드레스",
@@ -680,7 +680,7 @@ export const dresses: Dress[] = [
     era: "2010s",
     canvasPosition: { top: 20, left: 195, width: 110, height: 50 },
   },
-  // === Grace Kelly ===
+  // === Monaco Classic Collection ===
   {
     slug: "grace-kelly-wedding-dress",
     name: "그레이스 켈리 웨딩 드레스",

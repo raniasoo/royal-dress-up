@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getDressBySlug, dresses } from "@/data/dresses";
 
-export const runtime = "edge";
 export const alt = "The Royal Closet";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -60,9 +59,10 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             fontSize: 24,
             color: "#64748b",
             marginTop: 16,
+            display: "flex",
           }}
         >
-          {designer} · {year}
+          {`${designer} · ${year}`}
         </div>
         <div
           style={{

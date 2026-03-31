@@ -14,10 +14,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://royal-dress-up.vercel.app"),
   title: "The Royal Closet | 왕실 드레스 가상 피팅",
   description:
-    "다이애나, 케이트, 메건, 그레이스 켈리의 아이코닉한 왕실 드레스를 AI 가상 피팅으로 입어보세요. 31개 이상의 역사적인 왕실 의상과 악세서리 컬렉션.",
+    "역사 속 아이코닉한 왕실 드레스를 AI 가상 피팅으로 입어보세요. 31개 이상의 역사적인 왕실 의상과 악세서리 컬렉션.",
   openGraph: {
     title: "The Royal Closet | 왕실 드레스 가상 피팅",
-    description: "다이애나, 케이트, 메건의 전설적인 드레스를 AI로 입어보세요",
+    description: "역사 속 전설적인 왕실 드레스를 AI로 입어보세요",
     siteName: "The Royal Closet",
     locale: "ko_KR",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "The Royal Closet | 왕실 드레스 가상 피팅",
-    description: "다이애나, 케이트, 메건의 전설적인 드레스를 AI로 입어보세요",
+    description: "역사 속 전설적인 왕실 드레스를 AI로 입어보세요",
   },
 };
 

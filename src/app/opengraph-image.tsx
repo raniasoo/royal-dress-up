@@ -54,7 +54,7 @@ export default async function Image() {
             marginTop: 40,
           }}
         >
-          {["Diana", "Kate", "Meghan", "Grace Kelly"].map((name) => (
+          {["Royal", "Classic", "Modern", "Regency"].map((name) => (
             <div
               key={name}
               style={{

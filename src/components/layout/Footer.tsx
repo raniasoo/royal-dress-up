@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Crown } from "lucide-react";
 
 export function Footer() {
@@ -15,6 +16,12 @@ export function Footer() {
             모든 컬렉션은 역사적 패션 트렌드에서 영감을 받은 창작물이며,
             엔터테인먼트 목적으로 제공됩니다.
           </p>
+          <Link
+            href="/privacy"
+            className="text-xs text-slate-400 underline hover:text-slate-600 transition-colors"
+          >
+            개인정보 처리방침
+          </Link>
           <p className="text-xs text-slate-300">
             &copy; {new Date().getFullYear()} The Royal Closet. Demo Project.
           </p>

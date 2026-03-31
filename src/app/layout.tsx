@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import { Toaster } from "sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { AgeGate } from "@/components/ui/AgeGate";
 import "./globals.css";
 
 const geist = Geist({
@@ -37,10 +38,12 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${geist.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-white font-sans text-slate-900">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <Toaster position="bottom-center" richColors />
+        <AgeGate>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <Toaster position="bottom-center" richColors />
+        </AgeGate>
       </body>
     </html>
   );

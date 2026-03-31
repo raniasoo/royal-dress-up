@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2 } from "lucide-react";
+import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2, ShieldCheck } from "lucide-react";
 import { dresses, getClothing, getDressBySlug } from "@/data/dresses";
 import { Button } from "@/components/ui/Button";
 import { ShareModal } from "@/components/ui/ShareModal";
@@ -24,6 +24,7 @@ export default function TryOnPage() {
 function TryOnContent() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState(0);
+  const [photoConsent, setPhotoConsent] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -121,7 +122,53 @@ function TryOnContent() {
               사진을 업로드하세요
             </h2>
 
-            {!photo ? (
+            {!photoConsent ? (
+              <div className="mx-auto max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex items-center gap-3">
+                  <ShieldCheck className="h-6 w-6 text-emerald-600" />
+                  <h3 className="text-base font-semibold text-slate-900">사진 업로드 동의</h3>
+                </div>
+                <p className="mb-4 text-sm text-slate-600">
+                  귀하의 사진은 가상 트라이온 기능에만 사용됩니다.
+                </p>
+                <ul className="mb-5 space-y-2 text-sm text-slate-600">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-500">✓</span>
+                    사진은 브라우저에서만 처리되며 서버로 전송되지 않습니다
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-500">✓</span>
+                    얼굴 인식 기술을 사용하지 않습니다
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-emerald-500">✓</span>
+                    세션 종료 시 모든 사진 데이터가 자동 삭제됩니다
+                  </li>
+                </ul>
+                <label className="mb-5 flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={photoConsent}
+                    onChange={(e) => setPhotoConsent(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500"
+                  />
+                  <span className="text-sm text-slate-700">
+                    위 내용을 이해하고 사진 업로드에 동의합니다
+                  </span>
+                </label>
+                <div className="flex gap-3">
+                  <Button onClick={() => setPhotoConsent(true)} disabled={!photoConsent}>
+                    동의 후 계속
+                  </Button>
+                  <a
+                    href="/dress-up"
+                    className="inline-flex items-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
+                  >
+                    사진 없이 아바타 꾸미기
+                  </a>
+                </div>
+              </div>
+            ) : !photo ? (
               <div
                 {...getRootProps()}
                 className={`mx-auto flex max-w-md cursor-pointer flex-col items-center gap-4 rounded-xl border-2 border-dashed p-12 transition-colors ${

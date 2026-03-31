@@ -24,6 +24,23 @@ const ITEM_COLORS: Record<string, string> = {
   "diana-clutch-bag": "#2d2d2d",
   "elizabeth-coronation-gloves": "#fffefa",
   "kate-jimmy-choo-pumps": "#e8d5c0",
+  "meghan-givenchy-wedding": "#faf5ef",
+  "meghan-stella-reception": "#f5efe5",
+  "meghan-aquamarine-ring": "#4a8fa8",
+  "meghan-queen-mary-tiara": "#c4a35a",
+  "grace-kelly-wedding-dress": "#faf5ef",
+  "grace-kelly-blue-chiffon": "#a8c4d8",
+  "grace-kelly-hermes-bag": "#8b5e3c",
+  "kate-cartier-halo-tiara": "#b8b8b8",
+  "daphne-wedding-gown": "#faf5ef",
+  "daphne-blue-ball-gown": "#b8d4e8",
+  "charlotte-gold-court-gown": "#d4a520",
+  "penelope-yellow-dress": "#f0c040",
+  "marie-robe-a-la-francaise": "#e8b0c0",
+  "diana-sapphire-ring": "#1a3a6a",
+  "elizabeth-diamond-diadem": "#d4af37",
+  "marie-diamond-necklace": "#c0c0c0",
+  "charlotte-bridgerton-tiara": "#d4af37",
 };
 
 function getItemColor(slug: string) {
@@ -34,6 +51,7 @@ function getTextColor(slug: string) {
   const dark = [
     "diana-revenge-dress", "diana-travolta-dress", "kate-engagement-dress",
     "kate-red-korea", "kate-sapphire-earrings", "diana-clutch-bag",
+    "meghan-aquamarine-ring", "grace-kelly-hermes-bag", "diana-sapphire-ring",
   ];
   return dark.includes(slug) ? "#ffffff" : "#333333";
 }
@@ -244,8 +262,10 @@ function DressUpContent() {
                 </Button>
               </div>
             </div>
-            <div className="flex justify-center bg-slate-50 p-4">
-              <canvas ref={canvasRef} className="rounded-lg border border-slate-200" />
+            <div className="flex justify-center bg-slate-50 p-4 overflow-x-auto" style={{ backgroundImage: "linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
+              <div className="origin-top-left scale-[0.6] sm:scale-75 md:scale-90 lg:scale-100" style={{ width: 500, height: 700 }}>
+                <canvas ref={canvasRef} className="rounded-lg border border-slate-200" />
+              </div>
             </div>
           </div>
         </div>
@@ -326,10 +346,13 @@ function DressUpContent() {
                         : "hover:bg-slate-50"
                     }`}
                   >
-                    <div
-                      className="h-10 w-10 shrink-0 rounded-lg border border-slate-200"
-                      style={{ backgroundColor: getItemColor(item.slug) }}
-                    />
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-slate-200">
+                      <img
+                        src={item.images.thumbnail}
+                        alt={item.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-slate-800">
                         {item.name}

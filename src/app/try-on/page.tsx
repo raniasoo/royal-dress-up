@@ -6,10 +6,13 @@ import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2, ShieldCheck, Move, ZoomIn, ZoomOut } from "lucide-react";
+import { fal } from "@fal-ai/client";
 import { dresses, getClothing, getDressBySlug } from "@/data/dresses";
 import { Button } from "@/components/ui/Button";
 import { ShareModal } from "@/components/ui/ShareModal";
 import { Spinner } from "@/components/ui/Spinner";
+
+fal.config({ proxyUrl: "/api/tryon" });
 
 const steps = ["사진 업로드", "드레스 선택", "결과 확인"];
 
@@ -73,51 +76,53 @@ function TryOnContent() {
     setProcessingMsg(useAi ? "AI가 드레스를 피팅하고 있습니다..." : "드레스를 준비하고 있습니다...");
   }
 
-  // blob URL을 base64 data URL로 변환
-  async function blobUrlToBase64(blobUrl: string): Promise<string> {
-    const res = await fetch(blobUrl);
-    const blob = await res.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  // AI 피팅 모드
+  // AI 피팅 모드 — fal.ai 클라이언트에서 직접 호출 (프록시 경유, 타임아웃 없음)
   useEffect(() => {
     if (!processing || !aiMode || !photo || !selectedDress) return;
     let cancelled = false;
 
     async function runAiFitting() {
       try {
+        // 1) 사용자 사진을 fal storage에 업로드
         setProcessingMsg("사진을 업로드하고 있습니다...");
-        const modelImageBase64 = await blobUrlToBase64(photo!);
+        const photoRes = await fetch(photo!);
+        const photoBlob = await photoRes.blob();
+        const photoFile = new File([photoBlob], "photo.jpg", { type: photoBlob.type });
+        const photoUrl = await fal.storage.upload(photoFile);
+        if (cancelled) return;
 
-        // garment 이미지 URL (public 경로)
+        // 2) garment 이미지 URL
         const garmentPath = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
         const garmentFullUrl = `${window.location.origin}${garmentPath}`;
 
+        // 3) AI 피팅 실행
         setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (10~20초 소요)");
-
-        const res = await fetch("/api/tryon", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            modelImageUrl: modelImageBase64,
-            garmentImageUrl: garmentFullUrl,
+        const result = await fal.subscribe("fal-ai/fashn/tryon/v1.6", {
+          input: {
+            model_image: photoUrl,
+            garment_image: garmentFullUrl,
             category: "auto",
-          }),
+            mode: "balanced",
+            num_samples: 1,
+          },
+          onQueueUpdate: (update) => {
+            if (cancelled) return;
+            if (update.status === "IN_QUEUE") {
+              setProcessingMsg(`대기열에서 기다리는 중... (${update.queue_position ?? "?"}번째)`);
+            } else if (update.status === "IN_PROGRESS") {
+              setProcessingMsg("AI가 피팅 중입니다...");
+            }
+          },
         });
 
         if (cancelled) return;
-        const data = await res.json();
+        const data = result.data as { images?: { url: string }[] };
 
-        if (!res.ok || data.error) {
-          throw new Error(data.error || "AI 피팅 실패");
+        if (!data.images || data.images.length === 0) {
+          throw new Error("이미지 생성 실패");
         }
 
-        setAiResultUrl(data.imageUrl);
+        setAiResultUrl(data.images[0].url);
         setProcessing(false);
         setResultReady(true);
       } catch (err: unknown) {

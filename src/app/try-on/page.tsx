@@ -31,8 +31,11 @@ function TryOnContent() {
   const [resultReady, setResultReady] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [shareImage, setShareImage] = useState<string | null>(null);
+  const [dressOpacity, setDressOpacity] = useState(0.9);
+  const [removingBg, setRemovingBg] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<import("fabric").Canvas | null>(null);
+  const dressObjRef = useRef<import("fabric").FabricImage | null>(null);
 
   useEffect(() => {
     const dressParam = searchParams.get("dress");
@@ -59,22 +62,21 @@ function TryOnContent() {
   function goToResult() {
     setStep(2);
     setProcessing(true);
+    setRemovingBg(false);
     setResultReady(false);
-    setTimeout(() => {
-      setProcessing(false);
-      setResultReady(true);
-    }, 2000);
+    setDressOpacity(0.9);
   }
 
-  // Fabric.js 캔버스 초기화: 사진 배경 + 드레스 오버레이
+  // Fabric.js 캔버스 초기화: 사진 배경 + 배경 제거된 드레스 오버레이
   useEffect(() => {
-    if (!resultReady || !photo || !selectedDress) return;
+    if (!processing || !photo || !selectedDress) return;
 
     let canvas: import("fabric").Canvas | null = null;
+    let cancelled = false;
 
     async function init() {
       const fabric = await import("fabric");
-      if (!canvasRef.current) return;
+      if (cancelled || !canvasRef.current) return;
 
       const CANVAS_W = 500;
       const CANVAS_H = 650;
@@ -102,8 +104,24 @@ function TryOnContent() {
       });
       canvas.add(bgImg);
 
-      // 2) 드레스 이미지를 오버레이로 추가 (드래그/리사이즈/회전 가능)
-      const dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);
+      // 2) 드레스 배경 제거
+      setRemovingBg(true);
+      let dressImageUrl = selectedDress!.images.catalog;
+      try {
+        const { removeBackground } = await import("@imgly/background-removal");
+        const blob = await removeBackground(dressImageUrl, {
+          output: { format: "image/png" },
+        });
+        dressImageUrl = URL.createObjectURL(blob);
+      } catch {
+        // 배경 제거 실패 시 원본 이미지 사용
+        console.warn("배경 제거 실패, 원본 이미지를 사용합니다.");
+      }
+      if (cancelled) return;
+      setRemovingBg(false);
+
+      // 3) 드레스 이미지를 오버레이로 추가 (드래그/리사이즈/회전 가능)
+      const dressImg = await fabric.FabricImage.fromURL(dressImageUrl);
       const dressScale = Math.min(
         (CANVAS_W * 0.7) / dressImg.width!,
         (CANVAS_H * 0.75) / dressImg.height!,
@@ -115,7 +133,7 @@ function TryOnContent() {
         top: CANVAS_H / 2,
         originX: "center",
         originY: "center",
-        opacity: 0.88,
+        opacity: 0.9,
         cornerColor: "#e11d48",
         cornerStrokeColor: "#e11d48",
         cornerSize: 10,
@@ -126,15 +144,29 @@ function TryOnContent() {
       canvas.add(dressImg);
       canvas.setActiveObject(dressImg);
       canvas.renderAll();
+      dressObjRef.current = dressImg;
+
+      setProcessing(false);
+      setResultReady(true);
     }
 
     init();
     return () => {
+      cancelled = true;
       if (canvas) canvas.dispose();
       fabricRef.current = null;
+      dressObjRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultReady]);
+  }, [processing]);
+
+  // 불투명도 슬라이더 반영
+  useEffect(() => {
+    if (dressObjRef.current && fabricRef.current) {
+      dressObjRef.current.set({ opacity: dressOpacity });
+      fabricRef.current.renderAll();
+    }
+  }, [dressOpacity]);
 
   function downloadResult() {
     const canvas = fabricRef.current;
@@ -386,15 +418,21 @@ function TryOnContent() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
           >
-            {processing ? (
+            {processing && !resultReady ? (
               <div className="flex flex-col items-center gap-4 py-20">
                 <Spinner className="h-12 w-12" />
                 <p className="text-sm font-medium text-slate-500">
-                  드레스를 준비하고 있습니다...
+                  {removingBg
+                    ? "드레스 배경을 제거하고 있습니다..."
+                    : "드레스를 준비하고 있습니다..."}
                 </p>
-                <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
+                <p className="text-xs text-slate-400">
+                  {removingBg
+                    ? "AI가 배경을 분석 중입니다 (최초 1회 모델 다운로드 시 시간이 걸릴 수 있습니다)"
+                    : "잠시만 기다려주세요"}
+                </p>
               </div>
-            ) : (
+            ) : resultReady ? (
               <div className="mx-auto max-w-2xl">
                 <h2 className="mb-2 text-center text-xl font-bold text-slate-900">
                   피팅 결과
@@ -423,6 +461,24 @@ function TryOnContent() {
                       </Button>
                     </div>
                   </div>
+
+                  {/* 불투명도 슬라이더 */}
+                  <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-2.5">
+                    <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap">불투명도</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      value={dressOpacity}
+                      onChange={(e) => setDressOpacity(parseFloat(e.target.value))}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-rose-500"
+                    />
+                    <span className="text-[11px] font-mono text-slate-400 w-8 text-right">
+                      {Math.round(dressOpacity * 100)}%
+                    </span>
+                  </div>
+
                   <div className="flex justify-center bg-slate-50 p-4 overflow-x-auto">
                     <div className="origin-top scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100" style={{ width: 500, height: 650 }}>
                       <canvas ref={canvasRef} className="rounded-lg" />
@@ -438,6 +494,7 @@ function TryOnContent() {
                         fabricRef.current.dispose();
                         fabricRef.current = null;
                       }
+                      dressObjRef.current = null;
                       setStep(1);
                       setResultReady(false);
                     }}
@@ -458,7 +515,7 @@ function TryOnContent() {
                   title={selectedDress ? `${selectedDress.name} 가상 피팅` : "가상 피팅"}
                 />
               </div>
-            )}
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>

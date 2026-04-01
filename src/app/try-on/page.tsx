@@ -416,60 +416,66 @@ function TryOnContent() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
           >
-            {processing && !resultReady ? (
-              <div className="flex flex-col items-center gap-4 py-20">
-                <Spinner className="h-12 w-12" />
-                <p className="text-sm font-medium text-slate-500">
-                  {processingMsg}
-                </p>
-                <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
-              </div>
-            ) : resultReady ? (
-              <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-2xl">
                 <h2 className="mb-2 text-center text-xl font-bold text-slate-900">
                   피팅 결과
                 </h2>
-                <p className="mb-5 text-center text-xs text-slate-400">
-                  <Move className="mr-1 inline h-3 w-3" />
-                  드레스를 드래그하여 위치를 조정하세요. 모서리를 잡아 크기와 회전을 변경할 수 있습니다.
-                </p>
+                {resultReady && (
+                  <p className="mb-5 text-center text-xs text-slate-400">
+                    <Move className="mr-1 inline h-3 w-3" />
+                    드레스를 드래그하여 위치를 조정하세요. 모서리를 잡아 크기와 회전을 변경할 수 있습니다.
+                  </p>
+                )}
 
                 {/* Fabric.js Canvas */}
-                <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                  <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
-                    {selectedDress && (
-                      <span className="text-xs font-medium text-rose-500">
-                        {selectedDress.name} — {selectedDress.royal.name}
-                      </span>
-                    )}
-                    <div className="flex gap-1.5">
-                      <Button variant="ghost" size="sm" onClick={downloadResult}>
-                        <Download className="mr-1 h-3.5 w-3.5" />
-                        저장
-                      </Button>
-                      <Button variant="primary" size="sm" onClick={openShare}>
-                        <Share2 className="mr-1 h-3.5 w-3.5" />
-                        공유
-                      </Button>
+                <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                  {/* 로딩 오버레이 */}
+                  {processing && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white/80">
+                      <Spinner className="h-12 w-12" />
+                      <p className="text-sm font-medium text-slate-500">{processingMsg}</p>
+                      <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
                     </div>
-                  </div>
+                  )}
 
-                  {/* 불투명도 슬라이더 */}
-                  <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-2.5">
-                    <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap">불투명도</span>
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.05}
-                      value={dressOpacity}
-                      onChange={(e) => setDressOpacity(parseFloat(e.target.value))}
-                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-rose-500"
-                    />
-                    <span className="text-[11px] font-mono text-slate-400 w-8 text-right">
-                      {Math.round(dressOpacity * 100)}%
-                    </span>
-                  </div>
+                  {resultReady && (
+                    <>
+                      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
+                        {selectedDress && (
+                          <span className="text-xs font-medium text-rose-500">
+                            {selectedDress.name} — {selectedDress.royal.name}
+                          </span>
+                        )}
+                        <div className="flex gap-1.5">
+                          <Button variant="ghost" size="sm" onClick={downloadResult}>
+                            <Download className="mr-1 h-3.5 w-3.5" />
+                            저장
+                          </Button>
+                          <Button variant="primary" size="sm" onClick={openShare}>
+                            <Share2 className="mr-1 h-3.5 w-3.5" />
+                            공유
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* 불투명도 슬라이더 */}
+                      <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-2.5">
+                        <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap">불투명도</span>
+                        <input
+                          type="range"
+                          min={0}
+                          max={1}
+                          step={0.05}
+                          value={dressOpacity}
+                          onChange={(e) => setDressOpacity(parseFloat(e.target.value))}
+                          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-rose-500"
+                        />
+                        <span className="text-[11px] font-mono text-slate-400 w-8 text-right">
+                          {Math.round(dressOpacity * 100)}%
+                        </span>
+                      </div>
+                    </>
+                  )}
 
                   <div className="flex justify-center bg-slate-50 p-4 overflow-x-auto">
                     <div className="origin-top scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100" style={{ width: 500, height: 650 }}>
@@ -507,7 +513,6 @@ function TryOnContent() {
                   title={selectedDress ? `${selectedDress.name} 가상 피팅` : "가상 피팅"}
                 />
               </div>
-            ) : null}
           </motion.div>
         )}
       </AnimatePresence>

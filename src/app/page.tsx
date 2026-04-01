@@ -14,7 +14,7 @@ export default function HomePage() {
             왕실 드레스 가상 피팅
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-            다이애나, 케이트의
+            역사 속 왕실의
             <br />
             <span className="text-rose-600">전설적인 드레스</span>를 입어보세요
           </h1>

@@ -33,6 +33,9 @@ function TryOnContent() {
   const [shareImage, setShareImage] = useState<string | null>(null);
   const [dressOpacity, setDressOpacity] = useState(0.9);
   const [processingMsg, setProcessingMsg] = useState("");
+  const [aiMode, setAiMode] = useState(false);
+  const [aiResultUrl, setAiResultUrl] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<import("fabric").Canvas | null>(null);
   const dressObjRef = useRef<import("fabric").FabricImage | null>(null);
@@ -59,17 +62,81 @@ function TryOnContent() {
     multiple: false,
   });
 
-  function goToResult() {
+  function goToResult(useAi: boolean) {
     setStep(2);
     setProcessing(true);
-    setProcessingMsg("드레스를 준비하고 있습니다...");
     setResultReady(false);
     setDressOpacity(0.9);
+    setAiMode(useAi);
+    setAiResultUrl(null);
+    setAiError(null);
+    setProcessingMsg(useAi ? "AI가 드레스를 피팅하고 있습니다..." : "드레스를 준비하고 있습니다...");
   }
 
-  // Fabric.js 캔버스 초기화: 사진 배경 + 투명 배경 드레스 오버레이
+  // blob URL을 base64 data URL로 변환
+  async function blobUrlToBase64(blobUrl: string): Promise<string> {
+    const res = await fetch(blobUrl);
+    const blob = await res.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // AI 피팅 모드
   useEffect(() => {
-    if (!processing || !photo || !selectedDress) return;
+    if (!processing || !aiMode || !photo || !selectedDress) return;
+    let cancelled = false;
+
+    async function runAiFitting() {
+      try {
+        setProcessingMsg("사진을 업로드하고 있습니다...");
+        const modelImageBase64 = await blobUrlToBase64(photo!);
+
+        // garment 이미지 URL (public 경로)
+        const garmentPath = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
+        const garmentFullUrl = `${window.location.origin}${garmentPath}`;
+
+        setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (10~20초 소요)");
+
+        const res = await fetch("/api/tryon", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            modelImageUrl: modelImageBase64,
+            garmentImageUrl: garmentFullUrl,
+            category: "auto",
+          }),
+        });
+
+        if (cancelled) return;
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "AI 피팅 실패");
+        }
+
+        setAiResultUrl(data.imageUrl);
+        setProcessing(false);
+        setResultReady(true);
+      } catch (err: unknown) {
+        if (cancelled) return;
+        const msg = err instanceof Error ? err.message : "알 수 없는 오류";
+        setAiError(msg);
+        setProcessing(false);
+        setResultReady(true);
+      }
+    }
+
+    runAiFitting();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [processing, aiMode]);
+
+  // Fabric.js 캔버스 모드 (수동 오버레이)
+  useEffect(() => {
+    if (!processing || aiMode || !photo || !selectedDress) return;
 
     let canvas: import("fabric").Canvas | null = null;
     let cancelled = false;
@@ -89,7 +156,6 @@ function TryOnContent() {
       });
       fabricRef.current = canvas;
 
-      // 1) 사용자 사진을 배경으로
       setProcessingMsg("사진을 로딩하고 있습니다...");
       const bgImg = await fabric.FabricImage.fromURL(photo!);
       const scale = Math.max(CANVAS_W / bgImg.width!, CANVAS_H / bgImg.height!);
@@ -106,16 +172,13 @@ function TryOnContent() {
       canvas.add(bgImg);
       if (cancelled) return;
 
-      // 2) garment.png (투명 배경) 우선, 없으면 catalog.png 사용
       setProcessingMsg("드레스를 피팅하고 있습니다...");
       const garmentUrl = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
       let dressImg: import("fabric").FabricImage;
       try {
         dressImg = await fabric.FabricImage.fromURL(garmentUrl);
-        // garment.png가 유효한지 확인 (width > 0)
         if (!dressImg.width || dressImg.width < 10) throw new Error("invalid");
       } catch {
-        // garment.png 없으면 catalog.png 사용
         dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);
       }
       if (cancelled) return;
@@ -156,7 +219,7 @@ function TryOnContent() {
       dressObjRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [processing]);
+  }, [processing, aiMode]);
 
   // 불투명도 슬라이더 반영
   useEffect(() => {
@@ -390,19 +453,31 @@ function TryOnContent() {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-center gap-3">
-              <Button variant="outline" onClick={() => setStep(0)}>
-                <ChevronLeft className="mr-1 h-4 w-4" />
-                이전
-              </Button>
-              <Button
-                size="lg"
-                disabled={!selectedSlug}
-                onClick={goToResult}
-              >
-                피팅 시작
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setStep(0)}>
+                  <ChevronLeft className="mr-1 h-4 w-4" />
+                  이전
+                </Button>
+                <Button
+                  size="lg"
+                  disabled={!selectedSlug}
+                  onClick={() => goToResult(false)}
+                >
+                  수동 피팅
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+                <Button
+                  size="lg"
+                  disabled={!selectedSlug}
+                  onClick={() => goToResult(true)}
+                  className="bg-violet-600 hover:bg-violet-700"
+                >
+                  AI 피팅
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-[11px] text-slate-400">수동: 드레스를 직접 배치 | AI: Fashn AI가 자동으로 피팅</p>
             </div>
           </motion.div>
         )}
@@ -418,72 +493,138 @@ function TryOnContent() {
           >
             <div className="mx-auto max-w-2xl">
                 <h2 className="mb-2 text-center text-xl font-bold text-slate-900">
-                  피팅 결과
+                  피팅 결과 {aiMode && <span className="ml-1 rounded bg-violet-100 px-1.5 py-0.5 text-xs text-violet-600">AI</span>}
                 </h2>
-                {resultReady && (
-                  <p className="mb-5 text-center text-xs text-slate-400">
-                    <Move className="mr-1 inline h-3 w-3" />
-                    드레스를 드래그하여 위치를 조정하세요. 모서리를 잡아 크기와 회전을 변경할 수 있습니다.
-                  </p>
-                )}
 
-                {/* Fabric.js Canvas */}
-                <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                  {/* 로딩 오버레이 */}
-                  {processing && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white/80">
-                      <Spinner className="h-12 w-12" />
-                      <p className="text-sm font-medium text-slate-500">{processingMsg}</p>
-                      <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
-                    </div>
-                  )}
+                {/* === AI 피팅 모드 === */}
+                {aiMode ? (
+                  <>
+                    {processing && (
+                      <div className="flex flex-col items-center gap-4 py-20">
+                        <Spinner className="h-12 w-12" />
+                        <p className="text-sm font-medium text-slate-500">{processingMsg}</p>
+                        <p className="text-xs text-slate-400">10~20초 정도 소요됩니다</p>
+                      </div>
+                    )}
 
-                  {resultReady && (
-                    <>
-                      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
+                    {resultReady && aiError && (
+                      <div className="mx-auto max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+                        <p className="text-sm font-medium text-red-600 mb-2">AI 피팅 실패</p>
+                        <p className="text-xs text-red-500 mb-4">{aiError}</p>
+                        <div className="flex justify-center gap-3">
+                          <Button onClick={() => goToResult(false)}>
+                            수동 피팅으로 전환
+                          </Button>
+                          <Button variant="ghost" onClick={() => goToResult(true)}>
+                            다시 시도
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {resultReady && aiResultUrl && (
+                      <div>
                         {selectedDress && (
-                          <span className="text-xs font-medium text-rose-500">
+                          <p className="mb-4 text-center text-xs text-slate-400">
                             {selectedDress.name} — {selectedDress.royal.name}
-                          </span>
+                          </p>
                         )}
-                        <div className="flex gap-1.5">
-                          <Button variant="ghost" size="sm" onClick={downloadResult}>
-                            <Download className="mr-1 h-3.5 w-3.5" />
+                        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={aiResultUrl}
+                            alt="AI 피팅 결과"
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="mt-6 flex flex-wrap justify-center gap-3">
+                          <Button onClick={() => {
+                            const link = document.createElement("a");
+                            link.download = "royal-closet-ai-fitting.png";
+                            link.href = aiResultUrl;
+                            link.click();
+                          }}>
+                            <Download className="mr-1.5 h-4 w-4" />
                             저장
                           </Button>
-                          <Button variant="primary" size="sm" onClick={openShare}>
-                            <Share2 className="mr-1 h-3.5 w-3.5" />
+                          <Button variant="outline" onClick={() => {
+                            setShareImage(aiResultUrl);
+                            setShareOpen(true);
+                          }}>
+                            <Share2 className="mr-1.5 h-4 w-4" />
                             공유
                           </Button>
                         </div>
                       </div>
+                    )}
+                  </>
+                ) : (
+                  /* === 수동 피팅 모드 (Fabric.js) === */
+                  <>
+                    {resultReady && (
+                      <p className="mb-5 text-center text-xs text-slate-400">
+                        <Move className="mr-1 inline h-3 w-3" />
+                        드레스를 드래그하여 위치를 조정하세요. 모서리를 잡아 크기와 회전을 변경할 수 있습니다.
+                      </p>
+                    )}
 
-                      {/* 불투명도 슬라이더 */}
-                      <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-2.5">
-                        <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap">불투명도</span>
-                        <input
-                          type="range"
-                          min={0}
-                          max={1}
-                          step={0.05}
-                          value={dressOpacity}
-                          onChange={(e) => setDressOpacity(parseFloat(e.target.value))}
-                          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-rose-500"
-                        />
-                        <span className="text-[11px] font-mono text-slate-400 w-8 text-right">
-                          {Math.round(dressOpacity * 100)}%
-                        </span>
+                    <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                      {processing && (
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white/80">
+                          <Spinner className="h-12 w-12" />
+                          <p className="text-sm font-medium text-slate-500">{processingMsg}</p>
+                          <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
+                        </div>
+                      )}
+
+                      {resultReady && (
+                        <>
+                          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
+                            {selectedDress && (
+                              <span className="text-xs font-medium text-rose-500">
+                                {selectedDress.name} — {selectedDress.royal.name}
+                              </span>
+                            )}
+                            <div className="flex gap-1.5">
+                              <Button variant="ghost" size="sm" onClick={downloadResult}>
+                                <Download className="mr-1 h-3.5 w-3.5" />
+                                저장
+                              </Button>
+                              <Button variant="primary" size="sm" onClick={openShare}>
+                                <Share2 className="mr-1 h-3.5 w-3.5" />
+                                공유
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-2.5">
+                            <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap">불투명도</span>
+                            <input
+                              type="range"
+                              min={0}
+                              max={1}
+                              step={0.05}
+                              value={dressOpacity}
+                              onChange={(e) => setDressOpacity(parseFloat(e.target.value))}
+                              className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-rose-500"
+                            />
+                            <span className="text-[11px] font-mono text-slate-400 w-8 text-right">
+                              {Math.round(dressOpacity * 100)}%
+                            </span>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="flex justify-center bg-slate-50 p-4 overflow-x-auto">
+                        <div className="origin-top scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100" style={{ width: 500, height: 650 }}>
+                          <canvas ref={canvasRef} className="rounded-lg" />
+                        </div>
                       </div>
-                    </>
-                  )}
-
-                  <div className="flex justify-center bg-slate-50 p-4 overflow-x-auto">
-                    <div className="origin-top scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100" style={{ width: 500, height: 650 }}>
-                      <canvas ref={canvasRef} className="rounded-lg" />
                     </div>
-                  </div>
-                </div>
+                  </>
+                )}
 
+                {/* 공통 하단 버튼 */}
                 <div className="mt-6 flex flex-wrap justify-center gap-3">
                   <Button
                     variant="outline"

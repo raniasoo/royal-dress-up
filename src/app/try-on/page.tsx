@@ -32,7 +32,7 @@ function TryOnContent() {
   const [shareOpen, setShareOpen] = useState(false);
   const [shareImage, setShareImage] = useState<string | null>(null);
   const [dressOpacity, setDressOpacity] = useState(0.9);
-  const [removingBg, setRemovingBg] = useState(false);
+  const [processingMsg, setProcessingMsg] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<import("fabric").Canvas | null>(null);
   const dressObjRef = useRef<import("fabric").FabricImage | null>(null);
@@ -62,12 +62,12 @@ function TryOnContent() {
   function goToResult() {
     setStep(2);
     setProcessing(true);
-    setRemovingBg(false);
+    setProcessingMsg("드레스를 준비하고 있습니다...");
     setResultReady(false);
     setDressOpacity(0.9);
   }
 
-  // Fabric.js 캔버스 초기화: 사진 배경 + 배경 제거된 드레스 오버레이
+  // Fabric.js 캔버스 초기화: 사진 배경 + 투명 배경 드레스 오버레이
   useEffect(() => {
     if (!processing || !photo || !selectedDress) return;
 
@@ -90,6 +90,7 @@ function TryOnContent() {
       fabricRef.current = canvas;
 
       // 1) 사용자 사진을 배경으로
+      setProcessingMsg("사진을 로딩하고 있습니다...");
       const bgImg = await fabric.FabricImage.fromURL(photo!);
       const scale = Math.max(CANVAS_W / bgImg.width!, CANVAS_H / bgImg.height!);
       bgImg.set({
@@ -103,25 +104,22 @@ function TryOnContent() {
         evented: false,
       });
       canvas.add(bgImg);
+      if (cancelled) return;
 
-      // 2) 드레스 배경 제거
-      setRemovingBg(true);
-      let dressImageUrl = selectedDress!.images.catalog;
+      // 2) garment.png (투명 배경) 우선, 없으면 catalog.png 사용
+      setProcessingMsg("드레스를 피팅하고 있습니다...");
+      const garmentUrl = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
+      let dressImg: import("fabric").FabricImage;
       try {
-        const { removeBackground } = await import("@imgly/background-removal");
-        const blob = await removeBackground(dressImageUrl, {
-          output: { format: "image/png" },
-        });
-        dressImageUrl = URL.createObjectURL(blob);
+        dressImg = await fabric.FabricImage.fromURL(garmentUrl);
+        // garment.png가 유효한지 확인 (width > 0)
+        if (!dressImg.width || dressImg.width < 10) throw new Error("invalid");
       } catch {
-        // 배경 제거 실패 시 원본 이미지 사용
-        console.warn("배경 제거 실패, 원본 이미지를 사용합니다.");
+        // garment.png 없으면 catalog.png 사용
+        dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);
       }
       if (cancelled) return;
-      setRemovingBg(false);
 
-      // 3) 드레스 이미지를 오버레이로 추가 (드래그/리사이즈/회전 가능)
-      const dressImg = await fabric.FabricImage.fromURL(dressImageUrl);
       const dressScale = Math.min(
         (CANVAS_W * 0.7) / dressImg.width!,
         (CANVAS_H * 0.75) / dressImg.height!,
@@ -422,15 +420,9 @@ function TryOnContent() {
               <div className="flex flex-col items-center gap-4 py-20">
                 <Spinner className="h-12 w-12" />
                 <p className="text-sm font-medium text-slate-500">
-                  {removingBg
-                    ? "드레스 배경을 제거하고 있습니다..."
-                    : "드레스를 준비하고 있습니다..."}
+                  {processingMsg}
                 </p>
-                <p className="text-xs text-slate-400">
-                  {removingBg
-                    ? "AI가 배경을 분석 중입니다 (최초 1회 모델 다운로드 시 시간이 걸릴 수 있습니다)"
-                    : "잠시만 기다려주세요"}
-                </p>
+                <p className="text-xs text-slate-400">잠시만 기다려주세요</p>
               </div>
             ) : resultReady ? (
               <div className="mx-auto max-w-2xl">

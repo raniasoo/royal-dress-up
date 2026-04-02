@@ -70,7 +70,7 @@ export const dresses: Dress[] = [
     tags: ["이브닝", "블랙", "오프숄더", "미니"],
     images: {
       catalog: "/dresses/diana-revenge/catalog.png",
-      garment: "/dresses/diana-revenge/garment.svg",
+      garment: "/dresses/diana-revenge/garment.png",
       overlay: "/dresses/diana-revenge/overlay.svg",
       thumbnail: "/dresses/diana-revenge/catalog.png",
     },
@@ -93,7 +93,7 @@ export const dresses: Dress[] = [
     tags: ["웨딩", "아이보리", "실크", "트레인"],
     images: {
       catalog: "/dresses/diana-wedding/catalog.png",
-      garment: "/dresses/diana-wedding/garment.svg",
+      garment: "/dresses/diana-wedding/garment.png",
       overlay: "/dresses/diana-wedding/overlay.svg",
       thumbnail: "/dresses/diana-wedding/catalog.png",
     },
@@ -116,7 +116,7 @@ export const dresses: Dress[] = [
     tags: ["이브닝", "벨벳", "네이비", "오프숄더"],
     images: {
       catalog: "/dresses/diana-travolta/catalog.png",
-      garment: "/dresses/diana-travolta/garment.svg",
+      garment: "/dresses/diana-travolta/garment.png",
       overlay: "/dresses/diana-travolta/overlay.svg",
       thumbnail: "/dresses/diana-travolta/catalog.png",
     },
@@ -139,7 +139,7 @@ export const dresses: Dress[] = [
     tags: ["데이웨어", "블루", "랩드레스", "저지"],
     images: {
       catalog: "/dresses/kate-engagement/catalog.png",
-      garment: "/dresses/kate-engagement/garment.svg",
+      garment: "/dresses/kate-engagement/garment.png",
       overlay: "/dresses/kate-engagement/overlay.svg",
       thumbnail: "/dresses/kate-engagement/catalog.png",
     },
@@ -162,7 +162,7 @@ export const dresses: Dress[] = [
     tags: ["웨딩", "화이트", "레이스", "새틴"],
     images: {
       catalog: "/dresses/kate-wedding/catalog.png",
-      garment: "/dresses/kate-wedding/garment.svg",
+      garment: "/dresses/kate-wedding/garment.png",
       overlay: "/dresses/kate-wedding/overlay.svg",
       thumbnail: "/dresses/kate-wedding/catalog.png",
     },
@@ -183,7 +183,7 @@ export const dresses: Dress[] = [
     tags: ["이브닝", "레드", "A라인"],
     images: {
       catalog: "/dresses/kate-red-korea/catalog.png",
-      garment: "/dresses/kate-red-korea/garment.svg",
+      garment: "/dresses/kate-red-korea/garment.png",
       overlay: "/dresses/kate-red-korea/overlay.svg",
       thumbnail: "/dresses/kate-red-korea/catalog.png",
     },
@@ -206,7 +206,7 @@ export const dresses: Dress[] = [
     tags: ["대관식", "화이트", "새틴", "자수"],
     images: {
       catalog: "/dresses/elizabeth-coronation/catalog.png",
-      garment: "/dresses/elizabeth-coronation/garment.svg",
+      garment: "/dresses/elizabeth-coronation/garment.png",
       overlay: "/dresses/elizabeth-coronation/overlay.svg",
       thumbnail: "/dresses/elizabeth-coronation/catalog.png",
     },
@@ -230,7 +230,7 @@ export const dresses: Dress[] = [
     tags: ["티아라", "다이아몬드", "결혼식", "스펜서 가문"],
     images: {
       catalog: "/dresses/spencer-tiara/catalog.png",
-      garment: "/dresses/spencer-tiara/garment.svg",
+      garment: "/dresses/spencer-tiara/garment.png",
       overlay: "/dresses/spencer-tiara/overlay.svg",
       thumbnail: "/dresses/spencer-tiara/catalog.png",
     },
@@ -254,7 +254,7 @@ export const dresses: Dress[] = [
     tags: ["티아라", "진주", "다이아몬드", "국빈 만찬"],
     images: {
       catalog: "/dresses/lovers-knot-tiara/catalog.png",
-      garment: "/dresses/lovers-knot-tiara/garment.svg",
+      garment: "/dresses/lovers-knot-tiara/garment.png",
       overlay: "/dresses/lovers-knot-tiara/overlay.svg",
       thumbnail: "/dresses/lovers-knot-tiara/catalog.png",
     },
@@ -278,7 +278,7 @@ export const dresses: Dress[] = [
     tags: ["목걸이", "진주", "초커", "사파이어"],
     images: {
       catalog: "/dresses/diana-pearl-choker/catalog.png",
-      garment: "/dresses/diana-pearl-choker/garment.svg",
+      garment: "/dresses/diana-pearl-choker/garment.png",
       overlay: "/dresses/diana-pearl-choker/overlay.svg",
       thumbnail: "/dresses/diana-pearl-choker/catalog.png",
     },
@@ -300,7 +300,7 @@ export const dresses: Dress[] = [
     tags: ["귀걸이", "사파이어", "다이아몬드"],
     images: {
       catalog: "/dresses/kate-sapphire-earrings/catalog.png",
-      garment: "/dresses/kate-sapphire-earrings/garment.svg",
+      garment: "/dresses/kate-sapphire-earrings/garment.png",
       overlay: "/dresses/kate-sapphire-earrings/overlay.svg",
       thumbnail: "/dresses/kate-sapphire-earrings/catalog.png",
     },
@@ -324,7 +324,7 @@ export const dresses: Dress[] = [
     tags: ["백", "클러치", "가죽"],
     images: {
       catalog: "/dresses/diana-clutch/catalog.png",
-      garment: "/dresses/diana-clutch/garment.svg",
+      garment: "/dresses/diana-clutch/garment.png",
       overlay: "/dresses/diana-clutch/overlay.svg",
       thumbnail: "/dresses/diana-clutch/catalog.png",
     },
@@ -346,7 +346,7 @@ export const dresses: Dress[] = [
     tags: ["장갑", "화이트", "실크", "대관식"],
     images: {
       catalog: "/dresses/elizabeth-gloves/catalog.png",
-      garment: "/dresses/elizabeth-gloves/garment.svg",
+      garment: "/dresses/elizabeth-gloves/garment.png",
       overlay: "/dresses/elizabeth-gloves/overlay.svg",
       thumbnail: "/dresses/elizabeth-gloves/catalog.png",
     },
@@ -368,7 +368,7 @@ export const dresses: Dress[] = [
     tags: ["구두", "누드", "스틸레토", "펌프스"],
     images: {
       catalog: "/dresses/kate-pumps/catalog.png",
-      garment: "/dresses/kate-pumps/garment.svg",
+      garment: "/dresses/kate-pumps/garment.png",
       overlay: "/dresses/kate-pumps/overlay.svg",
       thumbnail: "/dresses/kate-pumps/catalog.png",
     },
@@ -393,7 +393,7 @@ export const dresses: Dress[] = [
     tags: ["웨딩", "리젠시", "아이보리", "엠파이어라인"],
     images: {
       catalog: "/dresses/daphne-wedding/catalog.png",
-      garment: "/dresses/daphne-wedding/garment.svg",
+      garment: "/dresses/daphne-wedding/garment.png",
       overlay: "/dresses/daphne-wedding/overlay.svg",
       thumbnail: "/dresses/daphne-wedding/catalog.png",
     },
@@ -414,7 +414,7 @@ export const dresses: Dress[] = [
     tags: ["볼가운", "파스텔블루", "리젠시", "무도회"],
     images: {
       catalog: "/dresses/daphne-blue-ball/catalog.png",
-      garment: "/dresses/daphne-blue-ball/garment.svg",
+      garment: "/dresses/daphne-blue-ball/garment.png",
       overlay: "/dresses/daphne-blue-ball/overlay.svg",
       thumbnail: "/dresses/daphne-blue-ball/catalog.png",
     },
@@ -437,7 +437,7 @@ export const dresses: Dress[] = [
     tags: ["골드", "왕실", "코르셋", "18세기"],
     images: {
       catalog: "/dresses/charlotte-gold/catalog.png",
-      garment: "/dresses/charlotte-gold/garment.svg",
+      garment: "/dresses/charlotte-gold/garment.png",
       overlay: "/dresses/charlotte-gold/overlay.svg",
       thumbnail: "/dresses/charlotte-gold/catalog.png",
     },
@@ -458,7 +458,7 @@ export const dresses: Dress[] = [
     tags: ["옐로우", "리젠시", "무도회", "페더링턴"],
     images: {
       catalog: "/dresses/penelope-yellow/catalog.png",
-      garment: "/dresses/penelope-yellow/garment.svg",
+      garment: "/dresses/penelope-yellow/garment.png",
       overlay: "/dresses/penelope-yellow/overlay.svg",
       thumbnail: "/dresses/penelope-yellow/catalog.png",
     },
@@ -482,7 +482,7 @@ export const dresses: Dress[] = [
     tags: ["로코코", "파니에", "레이스", "베르사유"],
     images: {
       catalog: "/dresses/marie-robe/catalog.png",
-      garment: "/dresses/marie-robe/garment.svg",
+      garment: "/dresses/marie-robe/garment.png",
       overlay: "/dresses/marie-robe/overlay.svg",
       thumbnail: "/dresses/marie-robe/catalog.png",
     },
@@ -506,7 +506,7 @@ export const dresses: Dress[] = [
     tags: ["반지", "사파이어", "다이아몬드", "약혼"],
     images: {
       catalog: "/dresses/diana-sapphire-ring/catalog.png",
-      garment: "/dresses/diana-sapphire-ring/garment.svg",
+      garment: "/dresses/diana-sapphire-ring/garment.png",
       overlay: "/dresses/diana-sapphire-ring/overlay.svg",
       thumbnail: "/dresses/diana-sapphire-ring/catalog.png",
     },
@@ -530,7 +530,7 @@ export const dresses: Dress[] = [
     tags: ["다이어뎀", "다이아몬드", "진주", "왕관"],
     images: {
       catalog: "/dresses/elizabeth-diadem/catalog.png",
-      garment: "/dresses/elizabeth-diadem/garment.svg",
+      garment: "/dresses/elizabeth-diadem/garment.png",
       overlay: "/dresses/elizabeth-diadem/overlay.svg",
       thumbnail: "/dresses/elizabeth-diadem/catalog.png",
     },
@@ -554,7 +554,7 @@ export const dresses: Dress[] = [
     tags: ["목걸이", "다이아몬드", "스캔들", "혁명"],
     images: {
       catalog: "/dresses/marie-necklace/catalog.png",
-      garment: "/dresses/marie-necklace/garment.svg",
+      garment: "/dresses/marie-necklace/garment.png",
       overlay: "/dresses/marie-necklace/overlay.svg",
       thumbnail: "/dresses/marie-necklace/catalog.png",
     },
@@ -576,7 +576,7 @@ export const dresses: Dress[] = [
     tags: ["티아라", "크리스탈", "리젠시", "왕관"],
     images: {
       catalog: "/dresses/charlotte-tiara/catalog.png",
-      garment: "/dresses/charlotte-tiara/garment.svg",
+      garment: "/dresses/charlotte-tiara/garment.png",
       overlay: "/dresses/charlotte-tiara/overlay.svg",
       thumbnail: "/dresses/charlotte-tiara/catalog.png",
     },
@@ -601,7 +601,7 @@ export const dresses: Dress[] = [
     tags: ["웨딩", "화이트", "미니멀", "보트넥"],
     images: {
       catalog: "/dresses/meghan-givenchy-wedding/catalog.png",
-      garment: "/dresses/meghan-givenchy-wedding/garment.svg",
+      garment: "/dresses/meghan-givenchy-wedding/garment.png",
       overlay: "/dresses/meghan-givenchy-wedding/overlay.svg",
       thumbnail: "/dresses/meghan-givenchy-wedding/catalog.png",
     },
@@ -624,7 +624,7 @@ export const dresses: Dress[] = [
     tags: ["리셉션", "화이트", "홀터넥", "실크"],
     images: {
       catalog: "/dresses/meghan-stella-reception/catalog.png",
-      garment: "/dresses/meghan-stella-reception/garment.svg",
+      garment: "/dresses/meghan-stella-reception/garment.png",
       overlay: "/dresses/meghan-stella-reception/overlay.svg",
       thumbnail: "/dresses/meghan-stella-reception/catalog.png",
     },
@@ -647,7 +647,7 @@ export const dresses: Dress[] = [
     tags: ["반지", "아쿠아마린", "다이아몬드", "칵테일링"],
     images: {
       catalog: "/dresses/meghan-aquamarine-ring/catalog.png",
-      garment: "/dresses/meghan-aquamarine-ring/garment.svg",
+      garment: "/dresses/meghan-aquamarine-ring/garment.png",
       overlay: "/dresses/meghan-aquamarine-ring/overlay.svg",
       thumbnail: "/dresses/meghan-aquamarine-ring/catalog.png",
     },
@@ -671,7 +671,7 @@ export const dresses: Dress[] = [
     tags: ["티아라", "다이아몬드", "아르데코", "반다"],
     images: {
       catalog: "/dresses/meghan-queen-mary-tiara/catalog.png",
-      garment: "/dresses/meghan-queen-mary-tiara/garment.svg",
+      garment: "/dresses/meghan-queen-mary-tiara/garment.png",
       overlay: "/dresses/meghan-queen-mary-tiara/overlay.svg",
       thumbnail: "/dresses/meghan-queen-mary-tiara/catalog.png",
     },
@@ -696,7 +696,7 @@ export const dresses: Dress[] = [
     tags: ["웨딩", "레이스", "아이보리", "하이넥"],
     images: {
       catalog: "/dresses/grace-kelly-wedding/catalog.png",
-      garment: "/dresses/grace-kelly-wedding/garment.svg",
+      garment: "/dresses/grace-kelly-wedding/garment.png",
       overlay: "/dresses/grace-kelly-wedding/overlay.svg",
       thumbnail: "/dresses/grace-kelly-wedding/catalog.png",
     },
@@ -719,7 +719,7 @@ export const dresses: Dress[] = [
     tags: ["이브닝", "블루", "시폰", "할리우드"],
     images: {
       catalog: "/dresses/grace-kelly-blue-chiffon/catalog.png",
-      garment: "/dresses/grace-kelly-blue-chiffon/garment.svg",
+      garment: "/dresses/grace-kelly-blue-chiffon/garment.png",
       overlay: "/dresses/grace-kelly-blue-chiffon/overlay.svg",
       thumbnail: "/dresses/grace-kelly-blue-chiffon/catalog.png",
     },
@@ -742,7 +742,7 @@ export const dresses: Dress[] = [
     tags: ["백", "에르메스", "가죽", "아이코닉"],
     images: {
       catalog: "/dresses/grace-kelly-hermes/catalog.png",
-      garment: "/dresses/grace-kelly-hermes/garment.svg",
+      garment: "/dresses/grace-kelly-hermes/garment.png",
       overlay: "/dresses/grace-kelly-hermes/overlay.svg",
       thumbnail: "/dresses/grace-kelly-hermes/catalog.png",
     },
@@ -766,7 +766,7 @@ export const dresses: Dress[] = [
     tags: ["티아라", "다이아몬드", "카르티에", "결혼식"],
     images: {
       catalog: "/dresses/kate-cartier-halo/catalog.png",
-      garment: "/dresses/kate-cartier-halo/garment.svg",
+      garment: "/dresses/kate-cartier-halo/garment.png",
       overlay: "/dresses/kate-cartier-halo/overlay.svg",
       thumbnail: "/dresses/kate-cartier-halo/catalog.png",
     },

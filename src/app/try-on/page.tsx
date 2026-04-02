@@ -91,18 +91,17 @@ function TryOnContent() {
         const photoUrl = await fal.storage.upload(photoFile);
         if (cancelled) return;
 
-        // 2) garment 이미지 URL
-        const garmentPath = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
-        const garmentFullUrl = `${window.location.origin}${garmentPath}`;
+        // 2) catalog 이미지 URL (배경 있는 원본이 AI 품질에 더 좋음)
+        const garmentFullUrl = `${window.location.origin}${selectedDress!.images.catalog}`;
 
         // 3) AI 피팅 실행
-        setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (10~20초 소요)");
+        setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (15~30초 소요)");
         const result = await fal.subscribe("fal-ai/fashn/tryon/v1.6", {
           input: {
             model_image: photoUrl,
             garment_image: garmentFullUrl,
             category: "auto",
-            mode: "balanced",
+            mode: "quality",
             num_samples: 1,
           },
           onQueueUpdate: (update) => {
@@ -178,10 +177,10 @@ function TryOnContent() {
       if (cancelled) return;
 
       setProcessingMsg("드레스를 피팅하고 있습니다...");
-      const garmentUrl = selectedDress!.images.catalog.replace("catalog.png", "garment.png");
+      // garment.png (투명 배경) 우선, 실패 시 catalog.png
       let dressImg: import("fabric").FabricImage;
       try {
-        dressImg = await fabric.FabricImage.fromURL(garmentUrl);
+        dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.garment);
         if (!dressImg.width || dressImg.width < 10) throw new Error("invalid");
       } catch {
         dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);

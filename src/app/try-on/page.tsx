@@ -107,16 +107,22 @@ function TryOnContent() {
           const photoUrl = await fal.storage.upload(photoFile);
           if (!isCurrent()) return;
 
-          const garmentFullUrl = `${window.location.origin}${selectedDress!.images.catalog}`;
+          const garmentPath = selectedDress!.images.flatLay || selectedDress!.images.catalog;
+          const garmentFullUrl = `${window.location.origin}${garmentPath}`;
 
           setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (15~30초 소요)");
+          const fashnCategory = selectedDress!.category === "dress" || selectedDress!.category === "gown" || selectedDress!.category === "suit"
+            ? "one-pieces" as const
+            : "tops" as const;
           const result = await fal.subscribe("fal-ai/fashn/tryon/v1.6", {
             input: {
               model_image: photoUrl,
               garment_image: garmentFullUrl,
-              category: "auto",
+              category: fashnCategory,
+              garment_photo_type: "flat-lay",
               mode: "quality",
               num_samples: 2,
+              seed: Math.floor(Math.random() * 4294967295),
             },
             onQueueUpdate: (update) => {
               if (!isCurrent()) return;
@@ -399,6 +405,16 @@ function TryOnContent() {
                     JPG, PNG, WebP (최대 10MB)
                   </p>
                 </div>
+              </div>
+              {/* AI 피팅 사진 가이드 */}
+              <div className="mx-auto mt-4 max-w-md rounded-lg border border-violet-100 bg-violet-50/50 px-4 py-3">
+                <p className="mb-1.5 text-xs font-semibold text-violet-600">AI 피팅 최적 사진 가이드</p>
+                <ul className="space-y-1 text-[11px] text-violet-500/80">
+                  <li>• 정면을 바라보는 <strong>전신 사진</strong>이 가장 좋습니다</li>
+                  <li>• <strong>밝고 단순한 배경</strong> 앞에서 촬영하세요</li>
+                  <li>• 몸에 <strong>붙는 옷</strong>을 입은 사진이 더 자연스럽습니다</li>
+                  <li>• 해상도 <strong>1000px 이상</strong>을 권장합니다</li>
+                </ul>
               </div>
             ) : (
               <div className="mx-auto max-w-md text-center">

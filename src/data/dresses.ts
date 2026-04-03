@@ -71,6 +71,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/diana-revenge/catalog.png",
       garment: "/dresses/diana-revenge/garment.png",
+      flatLay: "/dresses/diana-revenge/flat-lay/garment.png",
       overlay: "/dresses/diana-revenge/overlay.svg",
       thumbnail: "/dresses/diana-revenge/catalog.png",
     },
@@ -94,6 +95,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/diana-wedding/catalog.png",
       garment: "/dresses/diana-wedding/garment.png",
+      flatLay: "/dresses/diana-wedding/flat-lay/garment.png",
       overlay: "/dresses/diana-wedding/overlay.svg",
       thumbnail: "/dresses/diana-wedding/catalog.png",
     },
@@ -117,6 +119,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/diana-travolta/catalog.png",
       garment: "/dresses/diana-travolta/garment.png",
+      flatLay: "/dresses/diana-travolta/flat-lay/garment.png",
       overlay: "/dresses/diana-travolta/overlay.svg",
       thumbnail: "/dresses/diana-travolta/catalog.png",
     },
@@ -140,6 +143,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/kate-engagement/catalog.png",
       garment: "/dresses/kate-engagement/garment.png",
+      flatLay: "/dresses/kate-engagement/flat-lay/garment.png",
       overlay: "/dresses/kate-engagement/overlay.svg",
       thumbnail: "/dresses/kate-engagement/catalog.png",
     },
@@ -163,6 +167,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/kate-wedding/catalog.png",
       garment: "/dresses/kate-wedding/garment.png",
+      flatLay: "/dresses/kate-wedding/flat-lay/garment.png",
       overlay: "/dresses/kate-wedding/overlay.svg",
       thumbnail: "/dresses/kate-wedding/catalog.png",
     },
@@ -184,6 +189,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/kate-red-korea/catalog.png",
       garment: "/dresses/kate-red-korea/garment.png",
+      flatLay: "/dresses/kate-red-korea/flat-lay/garment.png",
       overlay: "/dresses/kate-red-korea/overlay.svg",
       thumbnail: "/dresses/kate-red-korea/catalog.png",
     },
@@ -207,6 +213,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/elizabeth-coronation/catalog.png",
       garment: "/dresses/elizabeth-coronation/garment.png",
+      flatLay: "/dresses/elizabeth-coronation/flat-lay/garment.png",
       overlay: "/dresses/elizabeth-coronation/overlay.svg",
       thumbnail: "/dresses/elizabeth-coronation/catalog.png",
     },
@@ -394,6 +401,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/daphne-wedding/catalog.png",
       garment: "/dresses/daphne-wedding/garment.png",
+      flatLay: "/dresses/daphne-wedding/flat-lay/garment.png",
       overlay: "/dresses/daphne-wedding/overlay.svg",
       thumbnail: "/dresses/daphne-wedding/catalog.png",
     },
@@ -415,6 +423,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/daphne-blue-ball/catalog.png",
       garment: "/dresses/daphne-blue-ball/garment.png",
+      flatLay: "/dresses/daphne-blue-ball/flat-lay/garment.png",
       overlay: "/dresses/daphne-blue-ball/overlay.svg",
       thumbnail: "/dresses/daphne-blue-ball/catalog.png",
     },
@@ -438,6 +447,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/charlotte-gold/catalog.png",
       garment: "/dresses/charlotte-gold/garment.png",
+      flatLay: "/dresses/charlotte-gold/flat-lay/garment.png",
       overlay: "/dresses/charlotte-gold/overlay.svg",
       thumbnail: "/dresses/charlotte-gold/catalog.png",
     },
@@ -459,6 +469,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/penelope-yellow/catalog.png",
       garment: "/dresses/penelope-yellow/garment.png",
+      flatLay: "/dresses/penelope-yellow/flat-lay/garment.png",
       overlay: "/dresses/penelope-yellow/overlay.svg",
       thumbnail: "/dresses/penelope-yellow/catalog.png",
     },
@@ -483,6 +494,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/marie-robe/catalog.png",
       garment: "/dresses/marie-robe/garment.png",
+      flatLay: "/dresses/marie-robe/flat-lay/garment.png",
       overlay: "/dresses/marie-robe/overlay.svg",
       thumbnail: "/dresses/marie-robe/catalog.png",
     },
@@ -602,6 +614,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/meghan-givenchy-wedding/catalog.png",
       garment: "/dresses/meghan-givenchy-wedding/garment.png",
+      flatLay: "/dresses/meghan-givenchy-wedding/flat-lay/garment.png",
       overlay: "/dresses/meghan-givenchy-wedding/overlay.svg",
       thumbnail: "/dresses/meghan-givenchy-wedding/catalog.png",
     },
@@ -625,6 +638,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/meghan-stella-reception/catalog.png",
       garment: "/dresses/meghan-stella-reception/garment.png",
+      flatLay: "/dresses/meghan-stella-reception/flat-lay/garment.png",
       overlay: "/dresses/meghan-stella-reception/overlay.svg",
       thumbnail: "/dresses/meghan-stella-reception/catalog.png",
     },
@@ -697,6 +711,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/grace-kelly-wedding/catalog.png",
       garment: "/dresses/grace-kelly-wedding/garment.png",
+      flatLay: "/dresses/grace-kelly-wedding/flat-lay/garment.png",
       overlay: "/dresses/grace-kelly-wedding/overlay.svg",
       thumbnail: "/dresses/grace-kelly-wedding/catalog.png",
     },
@@ -720,6 +735,7 @@ export const dresses: Dress[] = [
     images: {
       catalog: "/dresses/grace-kelly-blue-chiffon/catalog.png",
       garment: "/dresses/grace-kelly-blue-chiffon/garment.png",
+      flatLay: "/dresses/grace-kelly-blue-chiffon/flat-lay/garment.png",
       overlay: "/dresses/grace-kelly-blue-chiffon/overlay.svg",
       thumbnail: "/dresses/grace-kelly-blue-chiffon/catalog.png",
     },

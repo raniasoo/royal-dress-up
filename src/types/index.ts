@@ -7,6 +7,7 @@ export interface Royal {
 export interface DressImages {
   catalog: string;
   garment: string;
+  flatLay?: string;
   overlay: string;
   thumbnail: string;
 }

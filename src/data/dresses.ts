@@ -78,6 +78,7 @@ export const dresses: Dress[] = [
     category: "dress",
     itemType: "clothing",
     era: "1990s",
+    inpaintPrompt: "wearing a stunning black off-shoulder mini cocktail dress, silk chiffon with asymmetric hemline, fitted bodice with draped neckline, 1990s glamour style",
   },
   {
     slug: "diana-wedding-dress",
@@ -102,6 +103,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1980s",
+    inpaintPrompt: "wearing an extravagant ivory silk taffeta wedding gown with dramatic long train, romantic puffy sleeves, lace bodice adorned with sequins and pearls, 1980s royal wedding style",
   },
   {
     slug: "diana-travolta-dress",
@@ -126,6 +128,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1980s",
+    inpaintPrompt: "wearing a midnight blue velvet off-shoulder evening gown, full-length A-line silhouette, fitted bodice, flowing skirt, rich deep navy velvet fabric, 1980s ballroom elegance",
   },
   {
     slug: "kate-engagement-dress",
@@ -150,6 +153,7 @@ export const dresses: Dress[] = [
     category: "dress",
     itemType: "clothing",
     era: "2010s",
+    inpaintPrompt: "wearing a royal blue jersey wrap dress, knee-length, long sleeves, V-neckline with wrapped bodice, elegant contemporary style",
   },
   {
     slug: "kate-wedding-dress",
@@ -174,6 +178,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "2010s",
+    inpaintPrompt: "wearing a white satin wedding gown with delicate lace sleeves, V-neckline, fitted bodice, hand-cut English and French Chantilly lace applique with floral motifs",
   },
   {
     slug: "kate-red-korea",
@@ -196,6 +201,7 @@ export const dresses: Dress[] = [
     category: "dress",
     itemType: "clothing",
     era: "2020s",
+    inpaintPrompt: "wearing an elegant red A-line evening dress, fitted waist, long sleeves, midi length, sophisticated silhouette, rich crimson red fabric",
   },
   {
     slug: "elizabeth-coronation",
@@ -220,6 +226,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1950s" as Dress["era"],
+    inpaintPrompt: "wearing a white satin coronation gown with elaborate gold and silver thread embroidery of Commonwealth flowers, regal and majestic, 1950s royal ceremonial dress",
   },
   // === Accessories ===
   {
@@ -408,6 +415,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1800s",
+    inpaintPrompt: "wearing a Regency era ivory silk wedding gown with silver embroidery, empire waistline, puff sleeves, delicate lace trim, early 1800s English aristocratic style",
   },
   {
     slug: "daphne-blue-ball-gown",
@@ -430,6 +438,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1800s",
+    inpaintPrompt: "wearing a pastel blue Regency era ball gown, empire waistline, short puff sleeves, floor-length flowing skirt, delicate floral embroidery",
   },
   {
     slug: "queen-charlotte-gold-gown",
@@ -454,6 +463,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1800s",
+    inpaintPrompt: "wearing an extravagant gold court gown with elaborate gold thread embroidery and jewel embellishments, massive skirt with corset bodice, 18th century Georgian royal court fashion",
   },
   {
     slug: "penelope-yellow-dress",
@@ -476,6 +486,7 @@ export const dresses: Dress[] = [
     category: "dress",
     itemType: "clothing",
     era: "1800s",
+    inpaintPrompt: "wearing a bright yellow Regency era dress, empire waistline, puff sleeves with ribbon details, floor-length, ornate early 1800s English society fashion",
   },
   // === Marie Antoinette / Historical ===
   {
@@ -501,6 +512,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1700s",
+    inpaintPrompt: "wearing an elaborate Robe a la Francaise, wide pannier silhouette, pastel pink and cream silk with floral embroidery, extensive lace trim, 18th century French Rococo court fashion",
   },
   // === Jewelry / 보석 ===
   {
@@ -621,6 +633,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "2010s",
+    inpaintPrompt: "wearing a minimalist white bateau neckline wedding gown, pure white silk cady fabric, clean lines, three-quarter sleeves, modern understated elegance",
   },
   {
     slug: "meghan-stella-reception",
@@ -645,6 +658,7 @@ export const dresses: Dress[] = [
     category: "dress",
     itemType: "clothing",
     era: "2010s",
+    inpaintPrompt: "wearing a lily white halterneck evening dress, high neck with open back, silk crepe fabric, floor-length, sleek modern Hollywood glamour",
   },
   {
     slug: "meghan-aquamarine-ring",
@@ -718,6 +732,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1950s" as Dress["era"],
+    inpaintPrompt: "wearing a classic 1950s wedding gown with high neckline, long lace sleeves, full skirt, Brussels rose point lace bodice, timeless Old Hollywood glamour",
   },
   {
     slug: "grace-kelly-blue-chiffon",
@@ -742,6 +757,7 @@ export const dresses: Dress[] = [
     category: "gown",
     itemType: "clothing",
     era: "1950s" as Dress["era"],
+    inpaintPrompt: "wearing an ice blue chiffon evening gown, flowing ethereal fabric, floor-length, 1950s Hollywood glamour, French Riviera elegance",
   },
   {
     slug: "grace-kelly-hermes-bag",

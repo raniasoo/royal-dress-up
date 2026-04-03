@@ -97,9 +97,10 @@ function TryOnContent() {
     const isCurrent = () => myId === initIdRef.current;
 
     if (aiMode) {
-      // === AI 피팅 모드 ===
+      // === AI 인페인팅 모드 (EVF-SAM2 → FLUX Kontext Inpaint) ===
       (async () => {
         try {
+          // 1) 사용자 사진 업로드
           setProcessingMsg("사진을 업로드하고 있습니다...");
           const photoRes = await fetch(photo!);
           const photoBlob = await photoRes.blob();
@@ -107,48 +108,74 @@ function TryOnContent() {
           const photoUrl = await fal.storage.upload(photoFile);
           if (!isCurrent()) return;
 
-          // flat-lay 이미지가 실제로 존재하는지 확인 후 fallback
-          let garmentPath = selectedDress!.images.catalog;
-          if (selectedDress!.images.flatLay) {
-            try {
+          // 2) 드레스 참조 이미지 URL (flat-lay 우선, catalog fallback)
+          let refPath = selectedDress!.images.flatLay || selectedDress!.images.catalog;
+          try {
+            if (selectedDress!.images.flatLay) {
               const check = await fetch(selectedDress!.images.flatLay, { method: "HEAD" });
-              if (check.ok) garmentPath = selectedDress!.images.flatLay;
-            } catch { /* fallback to catalog */ }
-          }
-          const garmentFullUrl = `${window.location.origin}${garmentPath}`;
+              if (!check.ok) refPath = selectedDress!.images.catalog;
+            }
+          } catch { refPath = selectedDress!.images.catalog; }
+          const refImageUrl = `${window.location.origin}${refPath}`;
+          if (!isCurrent()) return;
 
-          setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (15~30초 소요)");
-          const fashnCategory = selectedDress!.category === "dress" || selectedDress!.category === "gown" || selectedDress!.category === "suit"
-            ? "one-pieces" as const
-            : "tops" as const;
-          const result = await fal.subscribe("fal-ai/fashn/tryon/v1.6", {
+          // 3) EVF-SAM2로 의류 영역 마스크 자동 생성
+          setProcessingMsg("의류 영역을 감지하고 있습니다...");
+          const segResult = await fal.subscribe("fal-ai/evf-sam", {
             input: {
-              model_image: photoUrl,
-              garment_image: garmentFullUrl,
-              category: fashnCategory,
-              garment_photo_type: "flat-lay",
-              mode: "quality",
-              num_samples: 2,
-              seed: Math.floor(Math.random() * 4294967295),
+              image_url: photoUrl,
+              prompt: "clothing, dress, top, shirt, outfit worn by person",
+              mask_only: true,
+              expand_mask: 10,
+              fill_holes: true,
             },
             onQueueUpdate: (update) => {
               if (!isCurrent()) return;
               if (update.status === "IN_QUEUE") {
-                setProcessingMsg(`대기열 ${update.queue_position ?? "?"}번째...`);
-              } else if (update.status === "IN_PROGRESS") {
-                setProcessingMsg("AI가 피팅 중입니다...");
+                setProcessingMsg(`마스크 생성 대기 중...`);
               }
             },
           });
-
           if (!isCurrent()) return;
-          const data = result.data as { images?: { url: string }[] };
 
-          if (!data.images || data.images.length === 0) {
-            throw new Error("이미지 생성 실패");
+          const segData = segResult.data as { image?: { url: string } };
+          if (!segData.image?.url) throw new Error("의류 영역 감지 실패");
+          const maskUrl = segData.image.url;
+
+          // 4) FLUX Kontext LoRA Inpaint로 드레스 합성
+          const prompt = selectedDress!.inpaintPrompt
+            || `wearing a beautiful ${selectedDress!.nameEn}, elegant royal fashion, high quality photography`;
+
+          setProcessingMsg("AI가 드레스를 합성하고 있습니다... (15~30초)");
+          const inpaintResult = await fal.subscribe("fal-ai/flux-kontext-lora/inpaint", {
+            input: {
+              image_url: photoUrl,
+              mask_url: maskUrl,
+              reference_image_url: refImageUrl,
+              prompt: prompt,
+              num_inference_steps: 30,
+              guidance_scale: 2.5,
+              strength: 0.9,
+              num_images: 2,
+              output_format: "png",
+            },
+            onQueueUpdate: (update) => {
+              if (!isCurrent()) return;
+              if (update.status === "IN_QUEUE") {
+                setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
+              } else if (update.status === "IN_PROGRESS") {
+                setProcessingMsg("AI가 드레스를 합성 중입니다...");
+              }
+            },
+          });
+          if (!isCurrent()) return;
+
+          const inpaintData = inpaintResult.data as { images?: { url: string }[] };
+          if (!inpaintData.images || inpaintData.images.length === 0) {
+            throw new Error("이미지 합성 실패");
           }
 
-          setAiResults(data.images.map((img) => img.url));
+          setAiResults(inpaintData.images.map((img) => img.url));
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);
@@ -165,81 +192,92 @@ function TryOnContent() {
       let canvas: import("fabric").Canvas | null = null;
 
       (async () => {
-        // 캔버스 DOM이 렌더링될 때까지 대기 (AnimatePresence exit 200ms + 여유)
-        for (let i = 0; i < 20; i++) {
-          await new Promise((r) => setTimeout(r, 50));
-          if (!isCurrent()) return;
-          if (canvasRef.current) break;
-        }
-        if (!canvasRef.current) return;
-
-        const fabric = await import("fabric");
-        if (!isCurrent() || !canvasRef.current) return;
-
-        const CANVAS_W = 500;
-        const CANVAS_H = 650;
-
-        canvas = new fabric.Canvas(canvasRef.current, {
-          width: CANVAS_W,
-          height: CANVAS_H,
-          backgroundColor: "#f1f5f9",
-          selection: true,
-        });
-        fabricRef.current = canvas;
-
-        setProcessingMsg("사진을 로딩하고 있습니다...");
-        const bgImg = await fabric.FabricImage.fromURL(photo!);
-        const bgScale = Math.max(CANVAS_W / bgImg.width!, CANVAS_H / bgImg.height!);
-        bgImg.set({
-          scaleX: bgScale,
-          scaleY: bgScale,
-          left: CANVAS_W / 2,
-          top: CANVAS_H / 2,
-          originX: "center",
-          originY: "center",
-          selectable: false,
-          evented: false,
-        });
-        canvas.add(bgImg);
-        if (!isCurrent()) return;
-
-        setProcessingMsg("드레스를 피팅하고 있습니다...");
-        let dressImg: import("fabric").FabricImage;
         try {
-          dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.garment);
-          if (!dressImg.width || dressImg.width < 10) throw new Error("invalid");
-        } catch {
-          dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);
+          // 캔버스 DOM이 렌더링될 때까지 대기 (AnimatePresence exit 200ms + 여유)
+          for (let i = 0; i < 30; i++) {
+            await new Promise((r) => setTimeout(r, 50));
+            if (!isCurrent()) return;
+            if (canvasRef.current) break;
+          }
+          if (!canvasRef.current) {
+            throw new Error("캔버스를 초기화할 수 없습니다. 다시 시도해주세요.");
+          }
+
+          const fabric = await import("fabric");
+          if (!isCurrent() || !canvasRef.current) return;
+
+          const CANVAS_W = 500;
+          const CANVAS_H = 650;
+
+          canvas = new fabric.Canvas(canvasRef.current, {
+            width: CANVAS_W,
+            height: CANVAS_H,
+            backgroundColor: "#f1f5f9",
+            selection: true,
+          });
+          fabricRef.current = canvas;
+
+          setProcessingMsg("사진을 로딩하고 있습니다...");
+          const bgImg = await fabric.FabricImage.fromURL(photo!);
+          if (!bgImg.width || !bgImg.height) throw new Error("사진 로드 실패");
+          const bgScale = Math.max(CANVAS_W / bgImg.width!, CANVAS_H / bgImg.height!);
+          bgImg.set({
+            scaleX: bgScale,
+            scaleY: bgScale,
+            left: CANVAS_W / 2,
+            top: CANVAS_H / 2,
+            originX: "center",
+            originY: "center",
+            selectable: false,
+            evented: false,
+          });
+          canvas.add(bgImg);
+          if (!isCurrent()) return;
+
+          setProcessingMsg("드레스를 피팅하고 있습니다...");
+          let dressImg: import("fabric").FabricImage;
+          try {
+            dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.garment);
+            if (!dressImg.width || dressImg.width < 10) throw new Error("invalid");
+          } catch {
+            dressImg = await fabric.FabricImage.fromURL(selectedDress!.images.catalog);
+          }
+          if (!isCurrent()) return;
+
+          const dressScale = Math.min(
+            (CANVAS_W * 0.7) / dressImg.width!,
+            (CANVAS_H * 0.75) / dressImg.height!,
+          );
+          dressImg.set({
+            scaleX: dressScale,
+            scaleY: dressScale,
+            left: CANVAS_W / 2,
+            top: CANVAS_H / 2,
+            originX: "center",
+            originY: "center",
+            opacity: 0.9,
+            cornerColor: "#e11d48",
+            cornerStrokeColor: "#e11d48",
+            cornerSize: 12,
+            transparentCorners: false,
+            borderColor: "#e11d48",
+            borderScaleFactor: 2,
+            padding: 5,
+          });
+          canvas.add(dressImg);
+          canvas.setActiveObject(dressImg);
+          canvas.renderAll();
+          dressObjRef.current = dressImg;
+
+          setProcessing(false);
+          setResultReady(true);
+        } catch (err: unknown) {
+          if (!isCurrent()) return;
+          const msg = err instanceof Error ? err.message : "수동 피팅 초기화 실패";
+          setAiError(msg);
+          setProcessing(false);
+          setResultReady(true);
         }
-        if (!isCurrent()) return;
-
-        const dressScale = Math.min(
-          (CANVAS_W * 0.7) / dressImg.width!,
-          (CANVAS_H * 0.75) / dressImg.height!,
-        );
-        dressImg.set({
-          scaleX: dressScale,
-          scaleY: dressScale,
-          left: CANVAS_W / 2,
-          top: CANVAS_H / 2,
-          originX: "center",
-          originY: "center",
-          opacity: 0.9,
-          cornerColor: "#e11d48",
-          cornerStrokeColor: "#e11d48",
-          cornerSize: 12,
-          transparentCorners: false,
-          borderColor: "#e11d48",
-          borderScaleFactor: 2,
-          padding: 5,
-        });
-        canvas.add(dressImg);
-        canvas.setActiveObject(dressImg);
-        canvas.renderAll();
-        dressObjRef.current = dressImg;
-
-        setProcessing(false);
-        setResultReady(true);
       })();
 
       return () => {
@@ -524,7 +562,7 @@ function TryOnContent() {
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
-              <p className="text-[11px] text-slate-400">수동: 드레스를 직접 배치 | AI: Fashn AI가 자동으로 피팅</p>
+              <p className="text-[11px] text-slate-400">수동: 드레스를 직접 배치 | AI: 사진 위에 드레스를 자동 합성</p>
             </div>
           </motion.div>
         )}
@@ -699,13 +737,17 @@ function TryOnContent() {
                   <Button
                     variant="outline"
                     onClick={() => {
+                      initIdRef.current += 1;
                       if (fabricRef.current) {
                         fabricRef.current.dispose();
                         fabricRef.current = null;
                       }
                       dressObjRef.current = null;
                       setStep(1);
+                      setProcessing(false);
                       setResultReady(false);
+                      setAiResults([]);
+                      setAiError(null);
                     }}
                   >
                     <ChevronLeft className="mr-1 h-4 w-4" />

@@ -31,6 +31,8 @@ export interface Dress {
   category: ItemCategory;
   era: Era;
   itemType: ItemType;
+  /** English prompt for AI inpainting */
+  inpaintPrompt?: string;
   /** Canvas placement hint */
   canvasPosition?: { top: number; left: number; width: number; height: number };
 }

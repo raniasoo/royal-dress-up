@@ -107,7 +107,14 @@ function TryOnContent() {
           const photoUrl = await fal.storage.upload(photoFile);
           if (!isCurrent()) return;
 
-          const garmentPath = selectedDress!.images.flatLay || selectedDress!.images.catalog;
+          // flat-lay 이미지가 실제로 존재하는지 확인 후 fallback
+          let garmentPath = selectedDress!.images.catalog;
+          if (selectedDress!.images.flatLay) {
+            try {
+              const check = await fetch(selectedDress!.images.flatLay, { method: "HEAD" });
+              if (check.ok) garmentPath = selectedDress!.images.flatLay;
+            } catch { /* fallback to catalog */ }
+          }
           const garmentFullUrl = `${window.location.origin}${garmentPath}`;
 
           setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (15~30초 소요)");
@@ -158,9 +165,13 @@ function TryOnContent() {
       let canvas: import("fabric").Canvas | null = null;
 
       (async () => {
-        // 캔버스 DOM이 렌더링될 때까지 짧은 대기
-        await new Promise((r) => setTimeout(r, 100));
-        if (!isCurrent() || !canvasRef.current) return;
+        // 캔버스 DOM이 렌더링될 때까지 대기 (AnimatePresence exit 200ms + 여유)
+        for (let i = 0; i < 20; i++) {
+          await new Promise((r) => setTimeout(r, 50));
+          if (!isCurrent()) return;
+          if (canvasRef.current) break;
+        }
+        if (!canvasRef.current) return;
 
         const fabric = await import("fabric");
         if (!isCurrent() || !canvasRef.current) return;
@@ -387,35 +398,36 @@ function TryOnContent() {
                 </div>
               </div>
             ) : !photo ? (
-              <div
-                {...getRootProps()}
-                className={`mx-auto flex max-w-md cursor-pointer flex-col items-center gap-4 rounded-xl border-2 border-dashed p-12 transition-colors ${
-                  isDragActive
-                    ? "border-rose-400 bg-rose-50"
-                    : "border-slate-300 bg-slate-50 hover:border-slate-400"
-                }`}
-              >
-                <input {...getInputProps()} />
-                <Upload className="h-10 w-10 text-slate-400" />
-                <div className="text-center">
-                  <p className="text-sm font-medium text-slate-600">
-                    사진을 드래그하거나 클릭하여 선택
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    JPG, PNG, WebP (최대 10MB)
-                  </p>
+              <>
+                <div
+                  {...getRootProps()}
+                  className={`mx-auto flex max-w-md cursor-pointer flex-col items-center gap-4 rounded-xl border-2 border-dashed p-12 transition-colors ${
+                    isDragActive
+                      ? "border-rose-400 bg-rose-50"
+                      : "border-slate-300 bg-slate-50 hover:border-slate-400"
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <Upload className="h-10 w-10 text-slate-400" />
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-slate-600">
+                      사진을 드래그하거나 클릭하여 선택
+                    </p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      JPG, PNG, WebP (최대 10MB)
+                    </p>
+                  </div>
                 </div>
-              </div>
-              {/* AI 피팅 사진 가이드 */}
-              <div className="mx-auto mt-4 max-w-md rounded-lg border border-violet-100 bg-violet-50/50 px-4 py-3">
-                <p className="mb-1.5 text-xs font-semibold text-violet-600">AI 피팅 최적 사진 가이드</p>
-                <ul className="space-y-1 text-[11px] text-violet-500/80">
-                  <li>• 정면을 바라보는 <strong>전신 사진</strong>이 가장 좋습니다</li>
-                  <li>• <strong>밝고 단순한 배경</strong> 앞에서 촬영하세요</li>
-                  <li>• 몸에 <strong>붙는 옷</strong>을 입은 사진이 더 자연스럽습니다</li>
-                  <li>• 해상도 <strong>1000px 이상</strong>을 권장합니다</li>
-                </ul>
-              </div>
+                <div className="mx-auto mt-4 max-w-md rounded-lg border border-violet-100 bg-violet-50/50 px-4 py-3">
+                  <p className="mb-1.5 text-xs font-semibold text-violet-600">AI 피팅 최적 사진 가이드</p>
+                  <ul className="space-y-1 text-[11px] text-violet-500/80">
+                    <li>• 정면을 바라보는 <strong>전신 사진</strong>이 가장 좋습니다</li>
+                    <li>• <strong>밝고 단순한 배경</strong> 앞에서 촬영하세요</li>
+                    <li>• 몸에 <strong>붙는 옷</strong>을 입은 사진이 더 자연스럽습니다</li>
+                    <li>• 해상도 <strong>1000px 이상</strong>을 권장합니다</li>
+                  </ul>
+                </div>
+              </>
             ) : (
               <div className="mx-auto max-w-md text-center">
                 <div className="overflow-hidden rounded-xl border border-slate-200">

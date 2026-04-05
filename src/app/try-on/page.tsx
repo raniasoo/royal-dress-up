@@ -142,40 +142,44 @@ function TryOnContent() {
           if (!segData.image?.url) throw new Error("의류 영역 감지 실패");
           const maskUrl = segData.image.url;
 
-          // 4) FLUX Kontext LoRA Inpaint로 드레스 합성
+          // 4) FLUX Pro Fill로 드레스 합성
           const prompt = selectedDress!.inpaintPrompt
             || `wearing a beautiful ${selectedDress!.nameEn}, elegant royal fashion, high quality photography`;
 
           setProcessingMsg("AI가 드레스를 합성하고 있습니다... (15~30초)");
-          const inpaintResult = await fal.subscribe("fal-ai/flux-kontext-lora/inpaint", {
-            input: {
-              image_url: photoUrl,
-              mask_url: maskUrl,
-              reference_image_url: refImageUrl,
-              prompt: prompt,
-              num_inference_steps: 30,
-              guidance_scale: 2.5,
-              strength: 0.9,
-              num_images: 2,
-              output_format: "png",
-            },
-            onQueueUpdate: (update) => {
-              if (!isCurrent()) return;
-              if (update.status === "IN_QUEUE") {
-                setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
-              } else if (update.status === "IN_PROGRESS") {
-                setProcessingMsg("AI가 드레스를 합성 중입니다...");
-              }
-            },
-          });
+          // 2장 생성을 위해 병렬 호출
+          const inpaintCalls = [0, 1].map(() =>
+            fal.subscribe("fal-ai/flux-pro/v1/fill", {
+              input: {
+                image_url: photoUrl,
+                mask_url: maskUrl,
+                prompt: prompt + ", photorealistic, high quality fashion photography",
+                output_format: "png",
+              },
+              onQueueUpdate: (update) => {
+                if (!isCurrent()) return;
+                if (update.status === "IN_QUEUE") {
+                  setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
+                } else if (update.status === "IN_PROGRESS") {
+                  setProcessingMsg("AI가 드레스를 합성 중입니다...");
+                }
+              },
+            })
+          );
+
+          const inpaintResults = await Promise.all(inpaintCalls);
           if (!isCurrent()) return;
 
-          const inpaintData = inpaintResult.data as { images?: { url: string }[] };
-          if (!inpaintData.images || inpaintData.images.length === 0) {
+          const allImages = inpaintResults.flatMap((r) => {
+            const data = r.data as { images?: { url: string }[] };
+            return data.images?.map((img) => img.url) || [];
+          });
+
+          if (allImages.length === 0) {
             throw new Error("이미지 합성 실패");
           }
 
-          setAiResults(inpaintData.images.map((img) => img.url));
+          setAiResults(allImages);
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);

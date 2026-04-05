@@ -97,80 +97,27 @@ function TryOnContent() {
     const isCurrent = () => myId === initIdRef.current;
 
     if (aiMode) {
-      // === AI 인페인팅 모드 (EVF-SAM2 → FLUX Kontext Inpaint) ===
+      // === GPT Image Edit 모드 ===
       (async () => {
         try {
-          // 1) 사용자 사진 업로드
-          setProcessingMsg("사진을 업로드하고 있습니다...");
-          const photoRes = await fetch(photo!);
-          const photoBlob = await photoRes.blob();
-          const photoFile = new File([photoBlob], "photo.jpg", { type: photoBlob.type });
-          const photoUrl = await fal.storage.upload(photoFile);
-          if (!isCurrent()) return;
+          setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (30~60초 소요)");
 
-          // 2) 드레스 참조 이미지 URL (flat-lay 우선, catalog fallback)
-          let refPath = selectedDress!.images.flatLay || selectedDress!.images.catalog;
-          try {
-            if (selectedDress!.images.flatLay) {
-              const check = await fetch(selectedDress!.images.flatLay, { method: "HEAD" });
-              if (!check.ok) refPath = selectedDress!.images.catalog;
-            }
-          } catch { refPath = selectedDress!.images.catalog; }
-          const refImageUrl = `${window.location.origin}${refPath}`;
-          if (!isCurrent()) return;
-
-          // 3) EVF-SAM2로 의류 영역 마스크 자동 생성
-          setProcessingMsg("의류 영역을 감지하고 있습니다...");
-          const segResult = await fal.subscribe("fal-ai/evf-sam", {
-            input: {
-              image_url: photoUrl,
-              prompt: "clothing, dress, top, shirt, outfit worn by person",
-              mask_only: true,
-              expand_mask: 10,
-              fill_holes: true,
-            },
-            onQueueUpdate: (update) => {
-              if (!isCurrent()) return;
-              if (update.status === "IN_QUEUE") {
-                setProcessingMsg(`마스크 생성 대기 중...`);
-              }
-            },
+          const res = await fetch("/api/gpt-fitting", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              photoDataUrl: photo,
+              dressImageUrl: selectedDress!.images.catalog,
+              dressName: selectedDress!.name,
+            }),
           });
+
           if (!isCurrent()) return;
 
-          const segData = segResult.data as { image?: { url: string } };
-          if (!segData.image?.url) throw new Error("의류 영역 감지 실패");
-          const maskUrl = segData.image.url;
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "AI 피팅 실패");
 
-          // 4) FLUX Pro Fill로 드레스 합성
-          const prompt = selectedDress!.inpaintPrompt
-            || `wearing a beautiful ${selectedDress!.nameEn}, elegant royal fashion, high quality photography`;
-
-          setProcessingMsg("AI가 드레스를 합성하고 있습니다... (20~40초)");
-          const inpaintResult = await fal.subscribe("fal-ai/flux-pro/v1/fill", {
-            input: {
-              image_url: photoUrl,
-              mask_url: maskUrl,
-              prompt: prompt + ", photorealistic, high quality fashion photography",
-              output_format: "png",
-            },
-            onQueueUpdate: (update) => {
-              if (!isCurrent()) return;
-              if (update.status === "IN_QUEUE") {
-                setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
-              } else if (update.status === "IN_PROGRESS") {
-                setProcessingMsg("AI가 드레스를 합성 중입니다...");
-              }
-            },
-          });
-          if (!isCurrent()) return;
-
-          const inpaintData = inpaintResult.data as { images?: { url: string }[] };
-          if (!inpaintData.images || inpaintData.images.length === 0) {
-            throw new Error("이미지 합성 실패");
-          }
-
-          setAiResults(inpaintData.images.map((img) => img.url));
+          setAiResults([data.imageUrl]);
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);

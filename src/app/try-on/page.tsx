@@ -146,40 +146,31 @@ function TryOnContent() {
           const prompt = selectedDress!.inpaintPrompt
             || `wearing a beautiful ${selectedDress!.nameEn}, elegant royal fashion, high quality photography`;
 
-          setProcessingMsg("AI가 드레스를 합성하고 있습니다... (15~30초)");
-          // 2장 생성을 위해 병렬 호출
-          const inpaintCalls = [0, 1].map(() =>
-            fal.subscribe("fal-ai/flux-pro/v1/fill", {
-              input: {
-                image_url: photoUrl,
-                mask_url: maskUrl,
-                prompt: prompt + ", photorealistic, high quality fashion photography",
-                output_format: "png",
-              },
-              onQueueUpdate: (update) => {
-                if (!isCurrent()) return;
-                if (update.status === "IN_QUEUE") {
-                  setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
-                } else if (update.status === "IN_PROGRESS") {
-                  setProcessingMsg("AI가 드레스를 합성 중입니다...");
-                }
-              },
-            })
-          );
-
-          const inpaintResults = await Promise.all(inpaintCalls);
+          setProcessingMsg("AI가 드레스를 합성하고 있습니다... (20~40초)");
+          const inpaintResult = await fal.subscribe("fal-ai/flux-pro/v1/fill", {
+            input: {
+              image_url: photoUrl,
+              mask_url: maskUrl,
+              prompt: prompt + ", photorealistic, high quality fashion photography",
+              output_format: "png",
+            },
+            onQueueUpdate: (update) => {
+              if (!isCurrent()) return;
+              if (update.status === "IN_QUEUE") {
+                setProcessingMsg(`합성 대기열 ${update.queue_position ?? "?"}번째...`);
+              } else if (update.status === "IN_PROGRESS") {
+                setProcessingMsg("AI가 드레스를 합성 중입니다...");
+              }
+            },
+          });
           if (!isCurrent()) return;
 
-          const allImages = inpaintResults.flatMap((r) => {
-            const data = r.data as { images?: { url: string }[] };
-            return data.images?.map((img) => img.url) || [];
-          });
-
-          if (allImages.length === 0) {
+          const inpaintData = inpaintResult.data as { images?: { url: string }[] };
+          if (!inpaintData.images || inpaintData.images.length === 0) {
             throw new Error("이미지 합성 실패");
           }
 
-          setAiResults(allImages);
+          setAiResults(inpaintData.images.map((img) => img.url));
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);

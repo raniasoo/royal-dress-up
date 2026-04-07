@@ -112,13 +112,37 @@ function TryOnContent() {
         const timeoutId = setTimeout(() => controller.abort(), 90_000);
 
         try {
+          setProcessingMsg("사진을 준비하고 있습니다...");
+
+          // blob URL → 리사이즈된 base64 data URL 변환
+          const photoDataUrl = await new Promise<string>((resolve, reject) => {
+            const img = new window.Image();
+            img.onload = () => {
+              const MAX = 1024;
+              let { width, height } = img;
+              if (width > MAX || height > MAX) {
+                const scale = MAX / Math.max(width, height);
+                width = Math.round(width * scale);
+                height = Math.round(height * scale);
+              }
+              const cvs = document.createElement("canvas");
+              cvs.width = width;
+              cvs.height = height;
+              const ctx = cvs.getContext("2d")!;
+              ctx.drawImage(img, 0, 0, width, height);
+              resolve(cvs.toDataURL("image/jpeg", 0.85));
+            };
+            img.onerror = () => reject(new Error("사진 로드에 실패했습니다."));
+            img.src = photo!;
+          });
+
           setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (30~60초 소요)");
 
           const res = await fetch("/api/gpt-fitting", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              photoDataUrl: photo,
+              photoDataUrl,
               dressImageUrl: selectedDress!.images.catalog,
               dressName: selectedDress!.name,
             }),

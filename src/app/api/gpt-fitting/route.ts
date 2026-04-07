@@ -13,8 +13,10 @@ export async function POST(req: NextRequest) {
     const photoBlob = new Blob([photoBuffer], { type: "image/jpeg" });
     const photoFile = new File([photoBlob], "photo.jpg", { type: "image/jpeg" });
 
-    // 드레스 이미지 fetch
-    const dressRes = await fetch(dressImageUrl);
+    // 드레스 이미지 fetch (상대 경로 → 절대 URL 변환)
+    const origin = req.nextUrl.origin;
+    const absoluteDressUrl = dressImageUrl.startsWith("/") ? `${origin}${dressImageUrl}` : dressImageUrl;
+    const dressRes = await fetch(absoluteDressUrl);
     const dressBuffer = Buffer.from(await dressRes.arrayBuffer());
     const dressBlob = new Blob([dressBuffer], { type: "image/png" });
     const dressFile = new File([dressBlob], "dress.png", { type: "image/png" });

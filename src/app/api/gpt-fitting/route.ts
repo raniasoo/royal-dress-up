@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const maxDuration = 120;
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req: NextRequest) {
@@ -33,7 +35,20 @@ export async function POST(req: NextRequest) {
     if (!imageBase64) throw new Error("이미지 생성 실패");
     return NextResponse.json({ imageUrl: `data:image/png;base64,${imageBase64}` });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error("[gpt-fitting] Error:", err);
+    let msg = err instanceof Error ? err.message : "Unknown error";
+    let status = 500;
+    if (err && typeof err === "object" && "status" in err) {
+      status = (err as { status: number }).status;
+    }
+    if (msg.includes("Could not process image")) {
+      msg = "이미지를 처리할 수 없습니다. 다른 사진으로 시도해주세요.";
+    } else if (msg.includes("rate limit") || status === 429) {
+      msg = "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.";
+      status = 429;
+    } else if (msg.includes("billing") || msg.includes("quota")) {
+      msg = "API 사용량이 초과되었습니다. 관리자에게 문의해주세요.";
+    }
+    return NextResponse.json({ error: msg }, { status });
   }
 }

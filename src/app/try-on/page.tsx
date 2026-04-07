@@ -114,11 +114,11 @@ function TryOnContent() {
         try {
           setProcessingMsg("사진을 준비하고 있습니다...");
 
-          // blob URL → 리사이즈된 base64 data URL 변환
+          // blob URL → base64 data URL 변환 (Vercel 4.5MB 제한 내 최대 품질 유지)
           const photoDataUrl = await new Promise<string>((resolve, reject) => {
             const img = new window.Image();
             img.onload = () => {
-              const MAX = 1024;
+              const MAX = 2048;
               let { width, height } = img;
               if (width > MAX || height > MAX) {
                 const scale = MAX / Math.max(width, height);
@@ -130,7 +130,7 @@ function TryOnContent() {
               cvs.height = height;
               const ctx = cvs.getContext("2d")!;
               ctx.drawImage(img, 0, 0, width, height);
-              resolve(cvs.toDataURL("image/jpeg", 0.85));
+              resolve(cvs.toDataURL("image/jpeg", 0.95));
             };
             img.onerror = () => reject(new Error("사진 로드에 실패했습니다."));
             img.src = photo!;

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Palette, Sparkles, Wand2, Info } from "lucide-react";
@@ -51,11 +52,13 @@ export default async function DressDetailPage({ params }: PageProps) {
       <div className="grid gap-8 md:grid-cols-2">
         {/* Image */}
         <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-slate-100">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={dress.images.catalog}
             alt={dress.name}
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+            className="object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-6 pt-16">
             <p className="text-sm font-medium text-rose-300">{dress.royal.name}</p>

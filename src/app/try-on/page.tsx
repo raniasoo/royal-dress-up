@@ -2,10 +2,11 @@
 
 import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2, ShieldCheck, Move, ZoomIn, ZoomOut } from "lucide-react";
+import { Upload, ChevronRight, ChevronLeft, Download, RotateCcw, Share2, ShieldCheck, Move, ZoomIn, ZoomOut, RefreshCw } from "lucide-react";
 import { fal } from "@fal-ai/client";
 import { dresses, getClothing, getDressBySlug } from "@/data/dresses";
 import { Button } from "@/components/ui/Button";
@@ -40,6 +41,8 @@ function TryOnContent() {
   const [aiResults, setAiResults] = useState<string[]>([]);
   const [aiSelectedIdx, setAiSelectedIdx] = useState(0);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 3;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<import("fabric").Canvas | null>(null);
   const dressObjRef = useRef<import("fabric").FabricImage | null>(null);
@@ -68,7 +71,7 @@ function TryOnContent() {
 
   const initIdRef = useRef(0);
 
-  function goToResult(useAi: boolean) {
+  function goToResult(useAi: boolean, isRetry = false) {
     // 이전 캔버스 정리
     if (fabricRef.current) {
       fabricRef.current.dispose();
@@ -84,6 +87,12 @@ function TryOnContent() {
     setAiResults([]);
     setAiSelectedIdx(0);
     setAiError(null);
+    if (isRetry) {
+      setRetryCount((c) => c + 1);
+      toast.info(`재시도 중... (${retryCount + 1}/${MAX_RETRIES})`);
+    } else {
+      setRetryCount(0);
+    }
     setProcessingMsg(useAi ? "AI가 드레스를 피팅하고 있습니다..." : "드레스를 준비하고 있습니다...");
 
     // 새 초기화 ID로 이전 effect 무효화
@@ -99,6 +108,9 @@ function TryOnContent() {
     if (aiMode) {
       // === GPT Image Edit 모드 ===
       (async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 90_000);
+
         try {
           setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (30~60초 소요)");
 
@@ -110,20 +122,35 @@ function TryOnContent() {
               dressImageUrl: selectedDress!.images.catalog,
               dressName: selectedDress!.name,
             }),
+            signal: controller.signal,
           });
 
+          clearTimeout(timeoutId);
           if (!isCurrent()) return;
 
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "AI 피팅 실패");
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 429) throw new Error("요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+            if (res.status >= 500) throw new Error("서버에 일시적인 문제가 발생했습니다. 다시 시도해주세요.");
+            throw new Error(data.error || "AI 피팅 실패");
+          }
 
+          const data = await res.json();
           setAiResults([data.imageUrl]);
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);
         } catch (err: unknown) {
+          clearTimeout(timeoutId);
           if (!isCurrent()) return;
-          const msg = err instanceof Error ? err.message : "알 수 없는 오류";
+          let msg: string;
+          if (err instanceof DOMException && err.name === "AbortError") {
+            msg = "요청 시간이 초과되었습니다. 네트워크 상태를 확인하고 다시 시도해주세요.";
+          } else if (err instanceof TypeError && err.message === "Failed to fetch") {
+            msg = "네트워크 연결에 실패했습니다. 인터넷 연결을 확인해주세요.";
+          } else {
+            msg = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
+          }
           setAiError(msg);
           setProcessing(false);
           setResultReady(true);
@@ -278,6 +305,7 @@ function TryOnContent() {
     setShareImage(null);
     setAiResults([]);
     setAiError(null);
+    setRetryCount(0);
   }
 
   const selectedDress = selectedSlug ? getDressBySlug(selectedSlug) : null;
@@ -464,12 +492,13 @@ function TryOnContent() {
                       : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <div className="aspect-square bg-slate-100">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                  <div className="relative aspect-square bg-slate-100">
+                    <Image
                       src={dress.images.catalog}
                       alt={dress.name}
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="(max-width: 640px) 50vw, 33vw"
+                      className="object-cover"
                     />
                   </div>
                   <div className="p-2.5">
@@ -538,13 +567,23 @@ function TryOnContent() {
                       <div className="mx-auto max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center">
                         <p className="text-sm font-medium text-red-600 mb-2">AI 피팅 실패</p>
                         <p className="text-xs text-red-500 mb-4">{aiError}</p>
+                        {retryCount > 0 && (
+                          <p className="text-xs text-red-400 mb-3">재시도 {retryCount}/{MAX_RETRIES}회 실패</p>
+                        )}
                         <div className="flex justify-center gap-3">
                           <Button onClick={() => goToResult(false)}>
                             수동 피팅으로 전환
                           </Button>
-                          <Button variant="ghost" onClick={() => goToResult(true)}>
-                            다시 시도
-                          </Button>
+                          {retryCount < MAX_RETRIES ? (
+                            <Button variant="ghost" onClick={() => goToResult(true, true)}>
+                              <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+                              다시 시도 ({MAX_RETRIES - retryCount}회 남음)
+                            </Button>
+                          ) : (
+                            <p className="flex items-center text-xs text-slate-400">
+                              최대 재시도 횟수를 초과했습니다
+                            </p>
+                          )}
                         </div>
                       </div>
                     )}

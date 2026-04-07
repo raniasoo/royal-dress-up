@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { RotateCcw, Download, Trash2, Crown, Shirt, Share2 } from "lucide-react";
 import { dresses, getClothing, getAccessories, getDressBySlug } from "@/data/dresses";
@@ -346,11 +347,13 @@ function DressUpContent() {
                         : "hover:bg-slate-50"
                     }`}
                   >
-                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-slate-200">
-                      <img
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-slate-200">
+                      <Image
                         src={item.images.thumbnail}
                         alt={item.name}
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="40px"
+                        className="object-cover"
                       />
                     </div>
                     <div className="min-w-0 flex-1">

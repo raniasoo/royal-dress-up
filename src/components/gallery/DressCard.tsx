@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Dress } from "@/types";
@@ -13,11 +14,12 @@ export function DressCard({ dress }: DressCardProps) {
     <Link href={`/dress/${dress.slug}`}>
       <Card hover>
         <div className="relative aspect-[3/4] bg-slate-100">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={dress.images.catalog}
             alt={dress.name}
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            sizes="(max-width: 640px) 50vw, 33vw"
+            className="object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-12">
             <p className="text-xs font-medium text-rose-300">

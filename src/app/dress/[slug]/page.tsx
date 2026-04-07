@@ -25,6 +25,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `${dress.name} - ${dress.royal.name}`,
       description: dress.description,
+      type: "article",
+      url: `/dress/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${dress.name} - ${dress.royal.name}`,
+      description: dress.description,
+    },
+    alternates: {
+      canonical: `/dress/${slug}`,
     },
   };
 }
@@ -38,8 +48,25 @@ export default async function DressDetailPage({ params }: PageProps) {
     .filter((d) => d.slug !== dress.slug)
     .slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: dress.name,
+    description: dress.description,
+    image: `https://royal-dress-up.vercel.app${dress.images.catalog}`,
+    brand: { "@type": "Brand", name: dress.royal.name },
+    designer: { "@type": "Person", name: dress.designer },
+    dateCreated: `${dress.year}`,
+    category: dress.category,
+    keywords: dress.tags.join(", "),
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Back */}
       <Link
         href="/"

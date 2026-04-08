@@ -106,75 +106,44 @@ function TryOnContent() {
     const isCurrent = () => myId === initIdRef.current;
 
     if (aiMode) {
-      // === GPT Image Edit 모드 ===
+      // === IDM-VTON 가상 피팅 모드 ===
       (async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 90_000);
-
         try {
-          setProcessingMsg("사진을 준비하고 있습니다...");
+          setProcessingMsg("사진을 업로드하고 있습니다...");
 
-          // blob URL → base64 data URL 변환 (Vercel 4.5MB 제한 내 최대 품질 유지)
-          const photoDataUrl = await new Promise<string>((resolve, reject) => {
-            const img = new window.Image();
-            img.onload = () => {
-              const MAX = 2048;
-              let { width, height } = img;
-              if (width > MAX || height > MAX) {
-                const scale = MAX / Math.max(width, height);
-                width = Math.round(width * scale);
-                height = Math.round(height * scale);
-              }
-              const cvs = document.createElement("canvas");
-              cvs.width = width;
-              cvs.height = height;
-              const ctx = cvs.getContext("2d")!;
-              ctx.drawImage(img, 0, 0, width, height);
-              resolve(cvs.toDataURL("image/jpeg", 0.95));
-            };
-            img.onerror = () => reject(new Error("사진 로드에 실패했습니다."));
-            img.src = photo!;
-          });
+          // blob URL → File → fal.ai 스토리지 업로드
+          const photoBlob = await fetch(photo!).then((r) => r.blob());
+          const photoFile = new File([photoBlob], "photo.jpg", { type: photoBlob.type });
+          const photoUrl = await fal.storage.upload(photoFile);
+
+          if (!isCurrent()) return;
+
+          // 드레스 garment 이미지 절대 URL
+          const garmentPath = selectedDress!.images.flatLay || selectedDress!.images.garment;
+          const garmentUrl = `${window.location.origin}${garmentPath}`;
 
           setProcessingMsg("AI가 드레스를 피팅하고 있습니다... (30~60초 소요)");
 
-          const res = await fetch("/api/gpt-fitting", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              photoDataUrl,
-              dressImageUrl: selectedDress!.images.catalog,
-              dressName: selectedDress!.name,
-            }),
-            signal: controller.signal,
+          const result = await fal.subscribe("fal-ai/idm-vton", {
+            input: {
+              human_image_url: photoUrl,
+              garment_image_url: garmentUrl,
+              description: `${selectedDress!.nameEn || selectedDress!.name} by ${selectedDress!.designer}`,
+            },
           });
 
-          clearTimeout(timeoutId);
           if (!isCurrent()) return;
 
-          if (!res.ok) {
-            const data = await res.json().catch(() => ({}));
-            if (res.status === 429) throw new Error("요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
-            if (res.status >= 500) throw new Error("서버에 일시적인 문제가 발생했습니다. 다시 시도해주세요.");
-            throw new Error(data.error || "AI 피팅 실패");
-          }
+          const imageUrl = (result.data as { image: { url: string } }).image.url;
+          if (!imageUrl) throw new Error("이미지 생성 실패");
 
-          const data = await res.json();
-          setAiResults([data.imageUrl]);
+          setAiResults([imageUrl]);
           setAiSelectedIdx(0);
           setProcessing(false);
           setResultReady(true);
         } catch (err: unknown) {
-          clearTimeout(timeoutId);
           if (!isCurrent()) return;
-          let msg: string;
-          if (err instanceof DOMException && err.name === "AbortError") {
-            msg = "요청 시간이 초과되었습니다. 네트워크 상태를 확인하고 다시 시도해주세요.";
-          } else if (err instanceof TypeError && err.message === "Failed to fetch") {
-            msg = "네트워크 연결에 실패했습니다. 인터넷 연결을 확인해주세요.";
-          } else {
-            msg = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
-          }
+          const msg = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
           setAiError(msg);
           setProcessing(false);
           setResultReady(true);
